@@ -90,7 +90,7 @@ if relatorio == "Peso Caminhão - Chegada":
     # =====================================================
 
     headers = [
-        "DATA",
+        "CONTAINER",
         "NOTA FISCAL",
         "LOTE",
         "QTD FARDOS",
@@ -108,7 +108,7 @@ if relatorio == "Peso Caminhão - Chegada":
 
         st.session_state.linhas_chegada = [
             {
-                "data": "",
+                "container": "",
                 "nota": "",
                 "lote": "",
                 "fardos": "",
@@ -206,7 +206,7 @@ if relatorio == "Peso Caminhão - Chegada":
 
             row = start_row + index
 
-            ws.cell(row=row, column=1).value = linha["data"]
+            ws.cell(row=row, column=1).value = linha["container"]
             ws.cell(row=row, column=2).value = linha["nota"]
             ws.cell(row=row, column=3).value = linha["lote"]
             ws.cell(row=row, column=4).value = linha["fardos"]
