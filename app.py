@@ -1,6 +1,4 @@
 # app.py
-
-```python
 import streamlit as st
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Border, Side, Font
