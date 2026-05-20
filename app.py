@@ -29,6 +29,7 @@ with col1:
 
 with col2:
     instrucao = st.text_input("Instrução")
+
     data_relatorio = st.date_input(
         "Data",
         datetime.today()
@@ -36,7 +37,6 @@ with col2:
 
 with col3:
     inspetor = st.text_input("Inspetor")
-    placa = st.text_input("Placa do Caminhão")
 
 # =====================================================
 # OBSERVAÇÃO
@@ -72,6 +72,7 @@ if "linhas" not in st.session_state:
             "peso_bruto": "",
             "peso_liquido": "",
             "tara": "",
+            "placa": "",
             "peso_caminhao_bruto": "",
             "tara_caminhao": "",
             "peso_bruto_carga": "",
@@ -94,6 +95,7 @@ if st.button("➕ Adicionar Linha"):
             "peso_bruto": "",
             "peso_liquido": "",
             "tara": "",
+            "placa": "",
             "peso_caminhao_bruto": "",
             "tara_caminhao": "",
             "peso_bruto_carga": "",
@@ -113,6 +115,7 @@ headers = [
     "PESO BRUTO",
     "PESO LÍQUIDO",
     "TARA",
+    "PLACA",
     "PESO CAMINHÃO CHEIO",
     "TARA CAMINHÃO",
     "PESO BRUTO CARGA",
@@ -174,25 +177,31 @@ for i, linha in enumerate(st.session_state.linhas):
         key=f"tara_{i}"
     )
 
-    linha["peso_caminhao_bruto"] = cols[7].text_input(
+    linha["placa"] = cols[7].text_input(
+        "",
+        value=linha["placa"],
+        key=f"placa_{i}"
+    )
+
+    linha["peso_caminhao_bruto"] = cols[8].text_input(
         "",
         value=linha["peso_caminhao_bruto"],
         key=f"peso_caminhao_bruto_{i}"
     )
 
-    linha["tara_caminhao"] = cols[8].text_input(
+    linha["tara_caminhao"] = cols[9].text_input(
         "",
         value=linha["tara_caminhao"],
         key=f"tara_caminhao_{i}"
     )
 
-    linha["peso_bruto_carga"] = cols[9].text_input(
+    linha["peso_bruto_carga"] = cols[10].text_input(
         "",
         value=linha["peso_bruto_carga"],
         key=f"peso_bruto_carga_{i}"
     )
 
-    linha["peso_liquido_carga"] = cols[10].text_input(
+    linha["peso_liquido_carga"] = cols[11].text_input(
         "",
         value=linha["peso_liquido_carga"],
         key=f"peso_liquido_carga_{i}"
@@ -218,9 +227,16 @@ def gerar_excel():
     ws["B3"] = terminal
 
     ws["F2"] = instrucao
-    ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
 
-    # Inspetor (I2:L3 mesclado)
+    ws["F3"] = data_relatorio.strftime(
+        "%d/%m/%Y"
+    )
+
+    # =====================================================
+    # INSPETOR
+    # I2:L3 MESCLADO
+    # =====================================================
+
     ws["I2"] = str(inspetor)
 
     ws["I2"].font = Font(
@@ -234,9 +250,6 @@ def gerar_excel():
         horizontal="center",
         vertical="center"
     )
-
-    # Placa
-    ws["H6"] = placa
 
     # =====================================================
     # OBSERVAÇÃO
@@ -310,6 +323,15 @@ def gerar_excel():
         ).value = linha["tara"]
 
         # =====================================================
+        # PLACA
+        # =====================================================
+
+        ws.cell(
+            row=row,
+            column=8
+        ).value = linha["placa"]
+
+        # =====================================================
         # CAMINHÃO / PESO CHEGADA
         # =====================================================
 
@@ -363,7 +385,7 @@ def gerar_excel():
             )
 
     # =====================================================
-    # SALVAR MEMÓRIA
+    # SALVAR EM MEMÓRIA
     # =====================================================
 
     output = BytesIO()
