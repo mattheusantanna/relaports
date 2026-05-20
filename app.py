@@ -251,7 +251,14 @@ elif relatorio == "Peso Caminhão - Saída":
         )
 
     with col3:
-        navio = st.text_input("Navio")
+
+        limite_peso_cntr = st.text_input(
+            "Limite de Peso pro Cntr"
+        )
+
+        limite_total_instrucao = st.text_input(
+            "Limite de Peso Total da Instrução"
+        )
 
     observacao = st.text_area(
         "Observação",
@@ -336,7 +343,8 @@ elif relatorio == "Peso Caminhão - Saída":
         ws["F2"] = instrucao
         ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
 
-        ws["I2"] = navio
+        ws["I2"] = limite_peso_cntr
+        ws["I3"] = limite_total_instrucao
 
         ws["B26"] = observacao
 
