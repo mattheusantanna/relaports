@@ -1,7 +1,6 @@
-# app.py
 import streamlit as st
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment, Border, Side, Font
+from openpyxl.styles import Alignment, Font
 from io import BytesIO
 from datetime import datetime
 
@@ -30,18 +29,8 @@ relatorio = st.sidebar.radio(
 )
 
 # =========================================================
-# ESTILO
-# =========================================================
-
-thin = Side(
-    border_style="thin",
-    color="000000"
-)
-
-# =========================================================
 # FUNÇÃO DOWNLOAD
 # =========================================================
-
 
 def download_excel(wb, nome_arquivo):
 
@@ -80,6 +69,7 @@ if relatorio == "Peso Caminhão - Chegada":
 
     with col2:
         instrucao = st.text_input("Instrução")
+
         data_relatorio = st.date_input(
             "Data",
             datetime.today()
@@ -164,6 +154,7 @@ if relatorio == "Peso Caminhão - Chegada":
         keys = list(linha.keys())
 
         for idx, key in enumerate(keys):
+
             linha[key] = cols[idx].text_input(
                 "",
                 value=linha[key],
@@ -193,6 +184,11 @@ if relatorio == "Peso Caminhão - Chegada":
             size=12,
             bold=True,
             color="000000"
+        )
+
+        ws["I2"].alignment = Alignment(
+            horizontal="center",
+            vertical="center"
         )
 
         ws["B26"] = observacao
@@ -248,6 +244,7 @@ elif relatorio == "Peso Caminhão - Saída":
 
     with col2:
         instrucao = st.text_input("Instrução")
+
         data_relatorio = st.date_input(
             "Data",
             datetime.today()
@@ -269,6 +266,7 @@ elif relatorio == "Peso Caminhão - Saída":
         "TOTAL FARDOS",
         "TARA CNTR",
         "MAX GROSS",
+        "BRUTO CARGA",
         "HORÁRIO INÍCIO",
         "HORÁRIO FINAL",
         "PLACA"
@@ -284,6 +282,7 @@ elif relatorio == "Peso Caminhão - Saída":
                 "fardos": "",
                 "tara_cntr": "",
                 "max_gross": "",
+                "bruto_carga": "",
                 "hora_inicio": "",
                 "hora_fim": "",
                 "placa": ""
@@ -300,6 +299,7 @@ elif relatorio == "Peso Caminhão - Saída":
                 "fardos": "",
                 "tara_cntr": "",
                 "max_gross": "",
+                "bruto_carga": "",
                 "hora_inicio": "",
                 "hora_fim": "",
                 "placa": ""
@@ -318,6 +318,7 @@ elif relatorio == "Peso Caminhão - Saída":
         keys = list(linha.keys())
 
         for idx, key in enumerate(keys):
+
             linha[key] = cols[idx].text_input(
                 "",
                 value=linha[key],
@@ -341,6 +342,11 @@ elif relatorio == "Peso Caminhão - Saída":
 
         ws["B26"] = observacao
 
+        ws["B26"].alignment = Alignment(
+            wrap_text=True,
+            vertical="top"
+        )
+
         start_row = 5
 
         for index, linha in enumerate(
@@ -355,9 +361,10 @@ elif relatorio == "Peso Caminhão - Saída":
             ws.cell(row=row, column=4).value = linha["fardos"]
             ws.cell(row=row, column=5).value = linha["tara_cntr"]
             ws.cell(row=row, column=6).value = linha["max_gross"]
-            ws.cell(row=row, column=7).value = linha["hora_inicio"]
-            ws.cell(row=row, column=8).value = linha["hora_fim"]
-            ws.cell(row=row, column=9).value = linha["placa"]
+            ws.cell(row=row, column=7).value = linha["bruto_carga"]
+            ws.cell(row=row, column=8).value = linha["hora_inicio"]
+            ws.cell(row=row, column=9).value = linha["hora_fim"]
+            ws.cell(row=row, column=10).value = linha["placa"]
 
         st.success("Relatório gerado com sucesso!")
 
@@ -385,23 +392,51 @@ elif relatorio == "Estufagem Individual":
     col1, col2 = st.columns(2)
 
     with col1:
+
         container = st.text_input("Nº Container")
-        tara_porta = st.text_input("Tara Porta Cntr")
+
+        tara_porta = st.text_input(
+            "Tara Porta Cntr"
+        )
+
         terminal = st.text_input("Terminal")
-        inicio = st.text_input("Começo Estufagem")
+
+        inicio = st.text_input(
+            "Começo Estufagem"
+        )
+
+        termino = st.text_input(
+            "Término Estufagem"
+        )
 
     with col2:
-        qtd_fardos = st.text_input("Qtd Fardos")
-        max_gross = st.text_input("Max Gross")
+
+        qtd_fardos = st.text_input(
+            "Qtd Fardos"
+        )
+
+        max_gross = st.text_input(
+            "Max Gross"
+        )
+
         lacre = st.text_input("Lacre")
-        data_hora = st.text_input("Data/Hora Início")
+
+        data_hora = st.text_input(
+            "Data/Hora Início"
+        )
+
+        data_hora_termino = st.text_input(
+            "Data/Hora Término"
+        )
 
     observacao = st.text_area(
         "Observação",
         height=180
     )
 
-    if st.button("📥 Gerar Relatório Estufagem"):
+    if st.button(
+        "📥 Gerar Relatório Estufagem"
+    ):
 
         wb = load_workbook(TEMPLATE_PATH)
 
@@ -422,14 +457,19 @@ elif relatorio == "Estufagem Individual":
         ws["B7"] = inicio
         ws["D7"] = data_hora
 
-        ws["A33"] = observacao
+        ws["B8"] = termino
+        ws["D8"] = data_hora_termino
 
-        ws["A33"].alignment = Alignment(
+        ws["B26"] = observacao
+
+        ws["B26"].alignment = Alignment(
             wrap_text=True,
             vertical="top"
         )
 
-        st.success("Relatório gerado com sucesso!")
+        st.success(
+            "Relatório gerado com sucesso!"
+        )
 
         download_excel(
             wb,
