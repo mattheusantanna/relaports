@@ -90,7 +90,7 @@ if relatorio == "Peso Caminhão - Chegada":
     # =====================================================
 
     headers = [
-        "CONTAINER",
+        "DATA",
         "NOTA FISCAL",
         "LOTE",
         "QTD FARDOS",
