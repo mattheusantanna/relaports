@@ -64,7 +64,7 @@ def download_excel(wb, nome_arquivo):
 
 if relatorio == "Peso Caminhão - Chegada":
 
-    TEMPLATE_PATH = "Relatorios.xlsx"
+    TEMPLATE_PATH = "Chegada.xlsx"
 
     st.title("📋 Peso Caminhão - Chegada")
 
