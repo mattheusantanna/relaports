@@ -4,9 +4,9 @@ from openpyxl.styles import Alignment, Border, Side, Font
 from io import BytesIO
 from datetime import datetime
 
-# =========================================
+# =====================================================
 # CONFIGURAÇÃO DA PÁGINA
-# =========================================
+# =====================================================
 
 st.set_page_config(
     page_title="Relatório de Peso de Caminhão",
@@ -17,9 +17,9 @@ TEMPLATE_PATH = "Relatorios.xlsx"
 
 st.title("📋 Relatório de Peso de Caminhão / Peso de Chegada")
 
-# =========================================
-# DADOS SUPERIORES
-# =========================================
+# =====================================================
+# CAMPOS SUPERIORES
+# =====================================================
 
 col1, col2, col3 = st.columns(3)
 
@@ -29,21 +29,40 @@ with col1:
 
 with col2:
     instrucao = st.text_input("Instrução")
-    data_relatorio = st.date_input("Data", datetime.today())
+    data_relatorio = st.date_input(
+        "Data",
+        datetime.today()
+    )
 
 with col3:
     inspetor = st.text_input("Inspetor")
     placa = st.text_input("Placa do Caminhão")
 
+# =====================================================
+# OBSERVAÇÃO
+# =====================================================
+
+observacao = st.text_area(
+    "Observação",
+    height=120
+)
+
 st.divider()
 
-# =========================================
-# DADOS DA TABELA
-# =========================================
+# =====================================================
+# TABELA
+# =====================================================
 
-st.subheader("Dados pertencentes à nota fiscal / caminhão")
+st.subheader(
+    "Dados pertencentes à nota fiscal / caminhão"
+)
+
+# =====================================================
+# SESSION STATE
+# =====================================================
 
 if "linhas" not in st.session_state:
+
     st.session_state.linhas = [
         {
             "data": "",
@@ -60,11 +79,12 @@ if "linhas" not in st.session_state:
         }
     ]
 
-# =========================================
+# =====================================================
 # ADICIONAR LINHA
-# =========================================
+# =====================================================
 
 if st.button("➕ Adicionar Linha"):
+
     st.session_state.linhas.append(
         {
             "data": "",
@@ -81,9 +101,9 @@ if st.button("➕ Adicionar Linha"):
         }
     )
 
-# =========================================
+# =====================================================
 # CABEÇALHO
-# =========================================
+# =====================================================
 
 headers = [
     "DATA",
@@ -104,9 +124,9 @@ cols = st.columns(len(headers))
 for col, h in zip(cols, headers):
     col.markdown(f"**{h}**")
 
-# =========================================
+# =====================================================
 # INPUTS DINÂMICOS
-# =========================================
+# =====================================================
 
 for i, linha in enumerate(st.session_state.linhas):
 
@@ -180,74 +200,149 @@ for i, linha in enumerate(st.session_state.linhas):
 
 st.divider()
 
-# =========================================
+# =====================================================
 # FUNÇÃO GERAR EXCEL
-# =========================================
+# =====================================================
 
 def gerar_excel():
 
     wb = load_workbook(TEMPLATE_PATH)
 
-    # ALTERE O NOME DA ABA CASO NECESSÁRIO
     ws = wb["Peso Caminhão - Chegada"]
 
-    # =========================================
+    # =====================================================
     # CAMPOS SUPERIORES
-    # =========================================
+    # =====================================================
 
     ws["B2"] = produtor
-    ws["F2"] = instrucao
-    ws["I2"] = inspetor
-
     ws["B3"] = terminal
+
+    ws["F2"] = instrucao
     ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
 
-    ws["H6"] = placa
+    # Inspetor (I2:L3 mesclado)
+    ws["I2"] = str(inspetor)
 
-    # =========================================
-    # ESTILOS
-    # =========================================
+    ws["I2"].font = Font(
+        name="Arial",
+        size=12,
+        bold=True,
+        color="000000"
+    )
 
-    thin = Side(border_style="thin", color="000000")
+    ws["I2"].alignment = Alignment(
+        horizontal="center",
+        vertical="center"
+    )
 
-    # =========================================
-    # PREENCHIMENTO DAS LINHAS
-    # =========================================
+    # Placa
+    ws["H5"] = placa
+
+    # =====================================================
+    # OBSERVAÇÃO
+    # =====================================================
+
+    ws["B26"] = observacao
+
+    ws["B26"].alignment = Alignment(
+        wrap_text=True,
+        vertical="top"
+    )
+
+    # =====================================================
+    # ESTILO
+    # =====================================================
+
+    thin = Side(
+        border_style="thin",
+        color="000000"
+    )
+
+    # =====================================================
+    # LINHAS DA TABELA
+    # =====================================================
 
     start_row = 6
 
-    for index, linha in enumerate(st.session_state.linhas):
+    for index, linha in enumerate(
+        st.session_state.linhas
+    ):
 
         row = start_row + index
 
-        # =========================================
-        # DADOS NOTA FISCAL
-        # =========================================
+        # =====================================================
+        # DADOS NF
+        # =====================================================
 
-        ws.cell(row=row, column=1).value = linha["data"]
-        ws.cell(row=row, column=2).value = linha["nota"]
-        ws.cell(row=row, column=3).value = linha["lote"]
-        ws.cell(row=row, column=4).value = linha["fardos"]
-        ws.cell(row=row, column=5).value = linha["peso_bruto"]
-        ws.cell(row=row, column=6).value = linha["peso_liquido"]
-        ws.cell(row=row, column=7).value = linha["tara"]
+        ws.cell(
+            row=row,
+            column=1
+        ).value = linha["data"]
 
-        # =========================================
-        # DADOS CAMINHÃO / PESO CHEGADA
-        # =========================================
+        ws.cell(
+            row=row,
+            column=2
+        ).value = linha["nota"]
 
-        ws.cell(row=row, column=9).value = linha["peso_caminhao_bruto"]
-        ws.cell(row=row, column=10).value = linha["tara_caminhao"]
-        ws.cell(row=row, column=11).value = linha["peso_bruto_carga"]
-        ws.cell(row=row, column=12).value = linha["peso_liquido_carga"]
+        ws.cell(
+            row=row,
+            column=3
+        ).value = linha["lote"]
 
-        # =========================================
+        ws.cell(
+            row=row,
+            column=4
+        ).value = linha["fardos"]
+
+        ws.cell(
+            row=row,
+            column=5
+        ).value = linha["peso_bruto"]
+
+        ws.cell(
+            row=row,
+            column=6
+        ).value = linha["peso_liquido"]
+
+        ws.cell(
+            row=row,
+            column=7
+        ).value = linha["tara"]
+
+        # =====================================================
+        # CAMINHÃO / PESO CHEGADA
+        # =====================================================
+
+        ws.cell(
+            row=row,
+            column=9
+        ).value = linha["peso_caminhao_bruto"]
+
+        ws.cell(
+            row=row,
+            column=10
+        ).value = linha["tara_caminhao"]
+
+        ws.cell(
+            row=row,
+            column=11
+        ).value = linha["peso_bruto_carga"]
+
+        ws.cell(
+            row=row,
+            column=12
+        ).value = linha["peso_liquido_carga"]
+
+        # =====================================================
         # FORMATAÇÃO
-        # =========================================
+        # =====================================================
 
         for col in range(1, 13):
 
-            cell = ws.cell(row=row, column=col)
+            cell = ws.cell(
+                row=row,
+                column=col
+            )
 
             cell.border = Border(
                 left=thin,
@@ -267,9 +362,9 @@ def gerar_excel():
                 size=10
             )
 
-    # =========================================
-    # SALVAR EM MEMÓRIA
-    # =========================================
+    # =====================================================
+    # SALVAR MEMÓRIA
+    # =====================================================
 
     output = BytesIO()
 
@@ -279,9 +374,9 @@ def gerar_excel():
 
     return output
 
-# =========================================
+# =====================================================
 # BOTÃO GERAR
-# =========================================
+# =====================================================
 
 if st.button("📥 Gerar Relatório"):
 
@@ -289,7 +384,9 @@ if st.button("📥 Gerar Relatório"):
 
         arquivo_excel = gerar_excel()
 
-        st.success("Relatório gerado com sucesso!")
+        st.success(
+            "Relatório gerado com sucesso!"
+        )
 
         st.download_button(
             label="⬇️ Baixar Excel",
@@ -300,4 +397,6 @@ if st.button("📥 Gerar Relatório"):
 
     except Exception as e:
 
-        st.error(f"Erro ao gerar relatório: {e}")
+        st.error(
+            f"Erro ao gerar relatório: {e}"
+        )
