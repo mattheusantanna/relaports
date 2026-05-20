@@ -159,7 +159,7 @@ def gerar_excel():
 
     ws["B3"] = terminal
     ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
-    ws["H5"] = placa
+    ws["H4"] = placa
 
     # =========================
     # DADOS TABELA
