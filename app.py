@@ -123,15 +123,15 @@ if relatorio == "Peso Caminhão - Chegada":
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        produtor = st.text_input("Produtor")
-        terminal = st.text_input("Terminal")
+        produtor = st.text_input("Produtor", key="chegada_produtor")
+        terminal = st.text_input("Terminal", key="chegada_terminal")
     with col2:
-        instrucao      = st.text_input("Instrução")
-        data_relatorio = st.date_input("Data", datetime.today())
+        instrucao      = st.text_input("Instrução", key="chegada_instrucao")
+        data_relatorio = st.date_input("Data", datetime.today(), key="chegada_data")
     with col3:
-        inspetor = st.text_input("Inspetor")
+        inspetor = st.text_input("Inspetor", key="chegada_inspetor")
 
-    observacao = st.text_area("Observação", height=120)
+    observacao = st.text_area("Observação", height=120, key="chegada_observacao")
     st.divider()
 
     botao_adicionar("Adicionar Linha", "linhas_chegada", LINHA_CHEGADA)
@@ -171,16 +171,16 @@ elif relatorio == "Peso Caminhão - Saída":
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        produtor = st.text_input("Produtor")
-        terminal = st.text_input("Terminal")
+        produtor = st.text_input("Produtor", key="saida_produtor")
+        terminal = st.text_input("Terminal", key="saida_terminal")
     with col2:
-        instrucao      = st.text_input("Instrução")
-        data_relatorio = st.date_input("Data", datetime.today())
+        instrucao      = st.text_input("Instrução", key="saida_instrucao")
+        data_relatorio = st.date_input("Data", datetime.today(), key="saida_data")
     with col3:
-        limite_peso_cntr        = st.text_input("Limite de Peso por Cntr")
-        limite_total_instrucao  = st.text_input("Limite de Peso Total da Instrução")
+        limite_peso_cntr        = st.text_input("Limite de Peso por Cntr", key="saida_lim_cntr")
+        limite_total_instrucao  = st.text_input("Limite de Peso Total da Instrução", key="saida_lim_total")
 
-    observacao = st.text_area("Observação", height=120)
+    observacao = st.text_area("Observação", height=120, key="saida_observacao")
     st.divider()
 
     botao_adicionar("Adicionar Linha Saída", "linhas_saida", LINHA_SAIDA)
@@ -219,25 +219,25 @@ elif relatorio == "Estufagem Individual":
 
     col1, col2 = st.columns(2)
     with col1:
-        instrucao = st.text_input("Instrução de Embarque")
-        produtor  = st.text_input("Produtor")
-        container = st.text_input("Nº Container")
-        terminal  = st.text_input("Terminal")
+        instrucao = st.text_input("Instrução de Embarque", key="est_instrucao")
+        produtor  = st.text_input("Produtor", key="est_produtor")
+        container = st.text_input("Nº Container", key="est_container")
+        terminal  = st.text_input("Terminal", key="est_terminal")
     with col2:
-        tara_porta = st.text_input("Tara Porta Cntr")
-        max_gross  = st.text_input("Max Gross")
-        lacre      = st.text_input("Lacre")
+        tara_porta = st.text_input("Tara Porta Cntr", key="est_tara_porta")
+        max_gross  = st.text_input("Max Gross", key="est_max_gross")
+        lacre      = st.text_input("Lacre", key="est_lacre")
 
     st.markdown("**⏱️ Datas e Horários**")
     col3, col4, col5, col6 = st.columns(4)
     with col3:
-        inicio = st.text_input("Começo da Estufagem")
+        inicio = st.text_input("Começo da Estufagem", key="est_inicio")
     with col4:
-        data_hora_inicio = st.text_input("Data/Hora Início")
+        data_hora_inicio = st.text_input("Data/Hora Início", key="est_dh_inicio")
     with col5:
-        termino = st.text_input("Término da Estufagem")
+        termino = st.text_input("Término da Estufagem", key="est_termino")
     with col6:
-        data_hora_termino = st.text_input("Data/Hora Término")
+        data_hora_termino = st.text_input("Data/Hora Término", key="est_dh_termino")
 
     st.divider()
     st.subheader("📦 Dados da Estufagem")
@@ -245,8 +245,8 @@ elif relatorio == "Estufagem Individual":
     botao_adicionar("Adicionar Linha Estufagem", "linhas_estufagem", LINHA_ESTUFAGEM)
     render_tabela("estufagem", st.session_state.linhas_estufagem, HEADERS_ESTUFAGEM)
 
-    inspetor   = st.text_input("Inspetor")
-    observacao = st.text_area("Observação Final", height=180)
+    inspetor   = st.text_input("Inspetor", key="est_inspetor")
+    observacao = st.text_area("Observação Final", height=180, key="est_observacao")
 
     if st.button("📥 Gerar Relatório Estufagem"):
         wb = load_workbook("Estufagem.xlsx")
