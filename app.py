@@ -53,7 +53,7 @@ def download_excel(wb, nome_arquivo):
 
 if relatorio == "Peso Caminhão - Chegada":
 
-    TEMPLATE_PATH = "Chegada.xlsx"
+    TEMPLATE_PATH = "Relatorios.xlsx"
 
     st.title("📋 Peso Caminhão - Chegada")
 
@@ -90,7 +90,7 @@ if relatorio == "Peso Caminhão - Chegada":
     # =====================================================
 
     headers = [
-        "CONTAINER",
+        "DATA",
         "NOTA FISCAL",
         "LOTE",
         "QTD FARDOS",
@@ -108,7 +108,7 @@ if relatorio == "Peso Caminhão - Chegada":
 
         st.session_state.linhas_chegada = [
             {
-                "container": "",
+                "data": "",
                 "nota": "",
                 "lote": "",
                 "fardos": "",
@@ -206,7 +206,7 @@ if relatorio == "Peso Caminhão - Chegada":
 
             row = start_row + index
 
-            ws.cell(row=row, column=1).value = linha["container"]
+            ws.cell(row=row, column=1).value = linha["data"]
             ws.cell(row=row, column=2).value = linha["nota"]
             ws.cell(row=row, column=3).value = linha["lote"]
             ws.cell(row=row, column=4).value = linha["fardos"]
@@ -251,7 +251,6 @@ elif relatorio == "Peso Caminhão - Saída":
         )
 
     with col3:
-        container = st.text_input("Container")
         navio = st.text_input("Navio")
 
     observacao = st.text_area(
@@ -260,7 +259,7 @@ elif relatorio == "Peso Caminhão - Saída":
     )
 
     headers = [
-        "DATA",
+        "CONTAINER",
         "NOTA FISCAL",
         "LOTE",
         "TOTAL FARDOS",
@@ -276,7 +275,7 @@ elif relatorio == "Peso Caminhão - Saída":
 
         st.session_state.linhas_saida = [
             {
-                "data": "",
+                "container": "",
                 "nota": "",
                 "lote": "",
                 "fardos": "",
@@ -293,7 +292,7 @@ elif relatorio == "Peso Caminhão - Saída":
 
         st.session_state.linhas_saida.append(
             {
-                "data": "",
+                "container": "",
                 "nota": "",
                 "lote": "",
                 "fardos": "",
@@ -337,8 +336,7 @@ elif relatorio == "Peso Caminhão - Saída":
         ws["F2"] = instrucao
         ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
 
-        ws["I2"] = container
-        ws["I3"] = navio
+        ws["I2"] = navio
 
         ws["B26"] = observacao
 
@@ -355,7 +353,7 @@ elif relatorio == "Peso Caminhão - Saída":
 
             row = start_row + index
 
-            ws.cell(row=row, column=1).value = linha["data"]
+            ws.cell(row=row, column=1).value = linha["container"]
             ws.cell(row=row, column=2).value = linha["nota"]
             ws.cell(row=row, column=3).value = linha["lote"]
             ws.cell(row=row, column=4).value = linha["fardos"]
