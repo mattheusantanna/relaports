@@ -236,7 +236,7 @@ def gerar_excel():
     )
 
     # Placa
-    ws["H5"] = placa
+    ws["H6"] = placa
 
     # =====================================================
     # OBSERVAÇÃO
