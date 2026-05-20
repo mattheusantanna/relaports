@@ -1,18 +1,3 @@
-# Sistema Streamlit — Relatório de Peso de Caminhão
-
-## Estrutura do Projeto
-
-```bash
-projeto/
-│
-├── app.py
-├── Relatorios.xlsx
-├── requirements.txt
-└── README.md
-```
-
----
-
 # app.py
 
 ```python
