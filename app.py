@@ -401,6 +401,12 @@ elif relatorio == "Estufagem Individual":
 
         container = st.text_input("Nº Container")
 
+        nota_fiscal = st.text_input(
+            "Nota Fiscal"
+        )
+
+        lote = st.text_input("Lote")
+
         tara_porta = st.text_input(
             "Tara Porta Cntr"
         )
@@ -421,6 +427,10 @@ elif relatorio == "Estufagem Individual":
             "Qtd Fardos"
         )
 
+        qtd_fardos_peso = st.text_input(
+            "Qtd Fardos Peso"
+        )
+
         max_gross = st.text_input(
             "Max Gross"
         )
@@ -436,7 +446,7 @@ elif relatorio == "Estufagem Individual":
         )
 
     observacao = st.text_area(
-        "Observação",
+        "OBS.",
         height=180
     )
 
@@ -454,17 +464,22 @@ elif relatorio == "Estufagem Individual":
         ws["B4"] = container
         ws["D4"] = qtd_fardos
 
-        ws["B5"] = tara_porta
-        ws["D5"] = max_gross
+        ws["B5"] = nota_fiscal
+        ws["D5"] = qtd_fardos_peso
 
-        ws["B6"] = terminal
-        ws["D6"] = lacre
+        ws["B6"] = lote
+        ws["D6"] = max_gross
 
-        ws["B7"] = inicio
-        ws["D7"] = data_hora
+        ws["B7"] = tara_porta
+        ws["D7"] = lacre
 
-        ws["B8"] = termino
-        ws["D8"] = data_hora_termino
+        ws["B8"] = terminal
+        ws["D8"] = data_hora
+
+        ws["B9"] = inicio
+        ws["D9"] = data_hora_termino
+
+        ws["B10"] = termino
 
         ws["B26"] = observacao
 
