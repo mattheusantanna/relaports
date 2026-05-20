@@ -568,9 +568,12 @@ elif relatorio == "Estufagem Individual":
         ws["D6"] = data_hora
 
         ws["B7"] = inicio
-        ws["D7"] = data_hora_termino
+        ws["D7"] = data_hora
 
         ws["B8"] = termino
+        ws["D8"] = data_hora_termino
+
+        start_row = 11
 
         # =================================================
         # TABELA
