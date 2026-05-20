@@ -423,29 +423,11 @@ elif relatorio == "Estufagem Individual":
             "Nº Container"
         )
 
-        nota_fiscal = st.text_input(
-            "Nota Fiscal"
-        )
-
     with col2:
-
-        lote = st.text_input(
-            "Lote"
-        )
-
-        qtd_fardos = st.text_input(
-            "Qtd Fardos"
-        )
-
-        qtd_fardos_peso = st.text_input(
-            "Qtd Fardos Peso"
-        )
 
         tara_porta = st.text_input(
             "Tara Porta Cntr"
         )
-
-    with col3:
 
         max_gross = st.text_input(
             "Max Gross"
@@ -455,6 +437,8 @@ elif relatorio == "Estufagem Individual":
             "Lacre"
         )
 
+    with col3:
+
         terminal = st.text_input(
             "Terminal"
         )
@@ -463,34 +447,95 @@ elif relatorio == "Estufagem Individual":
             "Começo Estufagem"
         )
 
+        termino = st.text_input(
+            "Término Estufagem"
+        )
+
     # =====================================================
-    # CAMPOS INFERIORES
+    # DATA / HORA
     # =====================================================
 
     col4, col5 = st.columns(2)
 
     with col4:
 
-        termino = st.text_input(
-            "Término Estufagem"
-        )
-
-    with col5:
-
         data_hora = st.text_input(
             "Data/Hora Início"
         )
+
+    with col5:
 
         data_hora_termino = st.text_input(
             "Data/Hora Término"
         )
 
+    st.divider()
+
     # =====================================================
-    # OBSERVAÇÃO
+    # BLOCO TABELA
+    # =====================================================
+
+    st.subheader("📦 Dados da Estufagem")
+
+    headers = [
+        "NOTA FISCAL",
+        "LOTE",
+        "QTD FARDOS",
+        "PESO",
+        "OBS."
+    ]
+
+    if "linhas_estufagem" not in st.session_state:
+
+        st.session_state.linhas_estufagem = [
+            {
+                "nota_fiscal": "",
+                "lote": "",
+                "qtd_fardos": "",
+                "peso": "",
+                "obs": ""
+            }
+        ]
+
+    if st.button("➕ Adicionar Linha Estufagem"):
+
+        st.session_state.linhas_estufagem.append(
+            {
+                "nota_fiscal": "",
+                "lote": "",
+                "qtd_fardos": "",
+                "peso": "",
+                "obs": ""
+            }
+        )
+
+    cols = st.columns(len(headers))
+
+    for col, h in zip(cols, headers):
+        col.markdown(f"**{h}**")
+
+    for i, linha in enumerate(
+        st.session_state.linhas_estufagem
+    ):
+
+        cols = st.columns(len(headers))
+
+        keys = list(linha.keys())
+
+        for idx, key in enumerate(keys):
+
+            linha[key] = cols[idx].text_input(
+                "",
+                value=linha[key],
+                key=f"estufagem_{key}_{i}"
+            )
+
+    # =====================================================
+    # OBSERVAÇÃO FINAL
     # =====================================================
 
     observacao = st.text_area(
-        "OBS.",
+        "Observação Final",
         height=180
     )
 
@@ -507,37 +552,68 @@ elif relatorio == "Estufagem Individual":
         ws = wb["Estufagem individual"]
 
         # =================================================
-        # PREENCHIMENTO
+        # CAMPOS FIXOS
         # =================================================
 
         ws["B2"] = instrucao
         ws["B3"] = produtor
 
         ws["B4"] = container
-        ws["D4"] = qtd_fardos
+        ws["D4"] = tara_porta
 
-        ws["B5"] = nota_fiscal
-        ws["D5"] = qtd_fardos_peso
+        ws["B5"] = max_gross
+        ws["D5"] = lacre
 
-        ws["B6"] = lote
-        ws["D6"] = max_gross
+        ws["B6"] = terminal
+        ws["D6"] = data_hora
 
-        ws["B7"] = tara_porta
-        ws["D7"] = lacre
+        ws["B7"] = inicio
+        ws["D7"] = data_hora_termino
 
-        ws["B8"] = terminal
-        ws["D8"] = data_hora
+        ws["B8"] = termino
 
-        ws["B9"] = inicio
-        ws["D9"] = data_hora_termino
+        # =================================================
+        # TABELA
+        # =================================================
 
-        ws["B10"] = termino
+        start_row = 12
+
+        for index, linha in enumerate(
+            st.session_state.linhas_estufagem
+        ):
+
+            row = start_row + index
+
+            ws.cell(
+                row=row,
+                column=1
+            ).value = linha["nota_fiscal"]
+
+            ws.cell(
+                row=row,
+                column=2
+            ).value = linha["lote"]
+
+            ws.cell(
+                row=row,
+                column=3
+            ).value = linha["qtd_fardos"]
+
+            ws.cell(
+                row=row,
+                column=4
+            ).value = linha["peso"]
+
+            ws.cell(
+                row=row,
+                column=5
+            ).value = linha["obs"]
+
+        # =================================================
+        # OBSERVAÇÃO FINAL
+        # =================================================
 
         ws["B26"] = observacao
-
-        # =================================================
-        # FORMATAÇÃO
-        # =================================================
 
         ws["B26"].alignment = Alignment(
             wrap_text=True,
