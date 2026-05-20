@@ -223,7 +223,6 @@ elif relatorio == "Estufagem Individual":
         produtor  = st.text_input("Produtor")
         container = st.text_input("Nº Container")
         terminal  = st.text_input("Terminal")
-        inspetor  = st.text_input("Inspetor")
     with col2:
         tara_porta = st.text_input("Tara Porta Cntr")
         max_gross  = st.text_input("Max Gross")
@@ -246,6 +245,7 @@ elif relatorio == "Estufagem Individual":
     botao_adicionar("Adicionar Linha Estufagem", "linhas_estufagem", LINHA_ESTUFAGEM)
     render_tabela("estufagem", st.session_state.linhas_estufagem, HEADERS_ESTUFAGEM)
 
+    inspetor   = st.text_input("Inspetor")
     observacao = st.text_area("Observação Final", height=180)
 
     if st.button("📥 Gerar Relatório Estufagem"):
