@@ -1,392 +1,49 @@
+# app.py
 import streamlit as st
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Border, Side, Font
 from io import BytesIO
 from datetime import datetime
 
-# =====================================================
-# CONFIGURAÇÃO DA PÁGINA
-# =====================================================
+# =========================================================
+# CONFIGURAÇÃO
+# =========================================================
 
 st.set_page_config(
-    page_title="Relatório de Peso de Caminhão",
+    page_title="Sistema de Relatórios",
     layout="wide"
 )
 
-TEMPLATE_PATH = "Relatorios.xlsx"
+# =========================================================
+# MENU LATERAL
+# =========================================================
 
-st.title("📋 Relatório de Peso de Caminhão / Peso de Chegada")
+st.sidebar.title("📋 Relatórios")
 
-# =====================================================
-# CAMPOS SUPERIORES
-# =====================================================
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    produtor = st.text_input("Produtor")
-    terminal = st.text_input("Terminal")
-
-with col2:
-    instrucao = st.text_input("Instrução")
-
-    data_relatorio = st.date_input(
-        "Data",
-        datetime.today()
-    )
-
-with col3:
-    inspetor = st.text_input("Inspetor")
-
-# =====================================================
-# OBSERVAÇÃO
-# =====================================================
-
-observacao = st.text_area(
-    "Observação",
-    height=120
-)
-
-st.divider()
-
-# =====================================================
-# TABELA
-# =====================================================
-
-st.subheader(
-    "Dados pertencentes à nota fiscal / caminhão"
-)
-
-# =====================================================
-# SESSION STATE
-# =====================================================
-
-if "linhas" not in st.session_state:
-
-    st.session_state.linhas = [
-        {
-            "data": "",
-            "nota": "",
-            "lote": "",
-            "fardos": "",
-            "peso_bruto": "",
-            "peso_liquido": "",
-            "tara": "",
-            "placa": "",
-            "peso_caminhao_bruto": "",
-            "tara_caminhao": "",
-            "peso_bruto_carga": "",
-            "peso_liquido_carga": ""
-        }
+relatorio = st.sidebar.radio(
+    "Selecione o relatório",
+    [
+        "Peso Caminhão - Chegada",
+        "Peso Caminhão - Saída",
+        "Estufagem Individual"
     ]
+)
 
-# =====================================================
-# ADICIONAR LINHA
-# =====================================================
+# =========================================================
+# ESTILO
+# =========================================================
 
-if st.button("➕ Adicionar Linha"):
+thin = Side(
+    border_style="thin",
+    color="000000"
+)
 
-    st.session_state.linhas.append(
-        {
-            "data": "",
-            "nota": "",
-            "lote": "",
-            "fardos": "",
-            "peso_bruto": "",
-            "peso_liquido": "",
-            "tara": "",
-            "placa": "",
-            "peso_caminhao_bruto": "",
-            "tara_caminhao": "",
-            "peso_bruto_carga": "",
-            "peso_liquido_carga": ""
-        }
-    )
+# =========================================================
+# FUNÇÃO DOWNLOAD
+# =========================================================
 
-# =====================================================
-# CABEÇALHO
-# =====================================================
 
-headers = [
-    "DATA",
-    "NOTA FISCAL",
-    "LOTE",
-    "QTD FARDOS",
-    "PESO BRUTO",
-    "PESO LÍQUIDO",
-    "TARA",
-    "PLACA",
-    "PESO CAMINHÃO CHEIO",
-    "TARA CAMINHÃO",
-    "PESO BRUTO CARGA",
-    "PESO LÍQUIDO CARGA"
-]
-
-cols = st.columns(len(headers))
-
-for col, h in zip(cols, headers):
-    col.markdown(f"**{h}**")
-
-# =====================================================
-# INPUTS DINÂMICOS
-# =====================================================
-
-for i, linha in enumerate(st.session_state.linhas):
-
-    cols = st.columns(len(headers))
-
-    linha["data"] = cols[0].text_input(
-        "",
-        value=linha["data"],
-        key=f"data_{i}"
-    )
-
-    linha["nota"] = cols[1].text_input(
-        "",
-        value=linha["nota"],
-        key=f"nota_{i}"
-    )
-
-    linha["lote"] = cols[2].text_input(
-        "",
-        value=linha["lote"],
-        key=f"lote_{i}"
-    )
-
-    linha["fardos"] = cols[3].text_input(
-        "",
-        value=linha["fardos"],
-        key=f"fardos_{i}"
-    )
-
-    linha["peso_bruto"] = cols[4].text_input(
-        "",
-        value=linha["peso_bruto"],
-        key=f"peso_bruto_{i}"
-    )
-
-    linha["peso_liquido"] = cols[5].text_input(
-        "",
-        value=linha["peso_liquido"],
-        key=f"peso_liquido_{i}"
-    )
-
-    linha["tara"] = cols[6].text_input(
-        "",
-        value=linha["tara"],
-        key=f"tara_{i}"
-    )
-
-    linha["placa"] = cols[7].text_input(
-        "",
-        value=linha["placa"],
-        key=f"placa_{i}"
-    )
-
-    linha["peso_caminhao_bruto"] = cols[8].text_input(
-        "",
-        value=linha["peso_caminhao_bruto"],
-        key=f"peso_caminhao_bruto_{i}"
-    )
-
-    linha["tara_caminhao"] = cols[9].text_input(
-        "",
-        value=linha["tara_caminhao"],
-        key=f"tara_caminhao_{i}"
-    )
-
-    linha["peso_bruto_carga"] = cols[10].text_input(
-        "",
-        value=linha["peso_bruto_carga"],
-        key=f"peso_bruto_carga_{i}"
-    )
-
-    linha["peso_liquido_carga"] = cols[11].text_input(
-        "",
-        value=linha["peso_liquido_carga"],
-        key=f"peso_liquido_carga_{i}"
-    )
-
-st.divider()
-
-# =====================================================
-# FUNÇÃO GERAR EXCEL
-# =====================================================
-
-def gerar_excel():
-
-    wb = load_workbook(TEMPLATE_PATH)
-
-    ws = wb["Peso Caminhão - Chegada"]
-
-    # =====================================================
-    # CAMPOS SUPERIORES
-    # =====================================================
-
-    ws["B2"] = produtor
-    ws["B3"] = terminal
-
-    ws["F2"] = instrucao
-
-    ws["F3"] = data_relatorio.strftime(
-        "%d/%m/%Y"
-    )
-
-    # =====================================================
-    # INSPETOR
-    # I2:L3 MESCLADO
-    # =====================================================
-
-    ws["I2"] = str(inspetor)
-
-    ws["I2"].font = Font(
-        name="Arial",
-        size=12,
-        bold=True,
-        color="000000"
-    )
-
-    ws["I2"].alignment = Alignment(
-        horizontal="center",
-        vertical="center"
-    )
-
-    # =====================================================
-    # OBSERVAÇÃO
-    # =====================================================
-
-    ws["B26"] = observacao
-
-    ws["B26"].alignment = Alignment(
-        wrap_text=True,
-        vertical="top"
-    )
-
-    # =====================================================
-    # ESTILO
-    # =====================================================
-
-    thin = Side(
-        border_style="thin",
-        color="000000"
-    )
-
-    # =====================================================
-    # LINHAS DA TABELA
-    # =====================================================
-
-    start_row = 6
-
-    for index, linha in enumerate(
-        st.session_state.linhas
-    ):
-
-        row = start_row + index
-
-        # =====================================================
-        # DADOS NF
-        # =====================================================
-
-        ws.cell(
-            row=row,
-            column=1
-        ).value = linha["data"]
-
-        ws.cell(
-            row=row,
-            column=2
-        ).value = linha["nota"]
-
-        ws.cell(
-            row=row,
-            column=3
-        ).value = linha["lote"]
-
-        ws.cell(
-            row=row,
-            column=4
-        ).value = linha["fardos"]
-
-        ws.cell(
-            row=row,
-            column=5
-        ).value = linha["peso_bruto"]
-
-        ws.cell(
-            row=row,
-            column=6
-        ).value = linha["peso_liquido"]
-
-        ws.cell(
-            row=row,
-            column=7
-        ).value = linha["tara"]
-
-        # =====================================================
-        # PLACA
-        # =====================================================
-
-        ws.cell(
-            row=row,
-            column=8
-        ).value = linha["placa"]
-
-        # =====================================================
-        # CAMINHÃO / PESO CHEGADA
-        # =====================================================
-
-        ws.cell(
-            row=row,
-            column=9
-        ).value = linha["peso_caminhao_bruto"]
-
-        ws.cell(
-            row=row,
-            column=10
-        ).value = linha["tara_caminhao"]
-
-        ws.cell(
-            row=row,
-            column=11
-        ).value = linha["peso_bruto_carga"]
-
-        ws.cell(
-            row=row,
-            column=12
-        ).value = linha["peso_liquido_carga"]
-
-        # =====================================================
-        # FORMATAÇÃO
-        # =====================================================
-
-        for col in range(1, 13):
-
-            cell = ws.cell(
-                row=row,
-                column=col
-            )
-
-            cell.border = Border(
-                left=thin,
-                right=thin,
-                top=thin,
-                bottom=thin
-            )
-
-            cell.alignment = Alignment(
-                horizontal="center",
-                vertical="center",
-                wrap_text=True
-            )
-
-            cell.font = Font(
-                name="Arial",
-                size=10
-            )
-
-    # =====================================================
-    # SALVAR EM MEMÓRIA
-    # =====================================================
+def download_excel(wb, nome_arquivo):
 
     output = BytesIO()
 
@@ -394,31 +51,387 @@ def gerar_excel():
 
     output.seek(0)
 
-    return output
+    st.download_button(
+        label="⬇️ Baixar Relatório",
+        data=output,
+        file_name=nome_arquivo,
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
-# =====================================================
-# BOTÃO GERAR
-# =====================================================
+# =========================================================
+# RELATÓRIO CHEGADA
+# =========================================================
 
-if st.button("📥 Gerar Relatório"):
+if relatorio == "Peso Caminhão - Chegada":
 
-    try:
+    TEMPLATE_PATH = "Relatorios.xlsx"
 
-        arquivo_excel = gerar_excel()
+    st.title("📋 Peso Caminhão - Chegada")
 
-        st.success(
-            "Relatório gerado com sucesso!"
+    # =====================================================
+    # CAMPOS SUPERIORES
+    # =====================================================
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        produtor = st.text_input("Produtor")
+        terminal = st.text_input("Terminal")
+
+    with col2:
+        instrucao = st.text_input("Instrução")
+        data_relatorio = st.date_input(
+            "Data",
+            datetime.today()
         )
 
-        st.download_button(
-            label="⬇️ Baixar Excel",
-            data=arquivo_excel,
-            file_name=f"relatorio_peso_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    with col3:
+        inspetor = st.text_input("Inspetor")
+
+    observacao = st.text_area(
+        "Observação",
+        height=120
+    )
+
+    st.divider()
+
+    # =====================================================
+    # TABELA
+    # =====================================================
+
+    headers = [
+        "DATA",
+        "NOTA FISCAL",
+        "LOTE",
+        "QTD FARDOS",
+        "PESO BRUTO",
+        "PESO LÍQUIDO",
+        "TARA",
+        "PLACA",
+        "PESO CAMINHÃO",
+        "TARA CAMINHÃO",
+        "PESO BRUTO CARGA",
+        "PESO LÍQUIDO CARGA"
+    ]
+
+    if "linhas_chegada" not in st.session_state:
+
+        st.session_state.linhas_chegada = [
+            {
+                "data": "",
+                "nota": "",
+                "lote": "",
+                "fardos": "",
+                "peso_bruto": "",
+                "peso_liquido": "",
+                "tara": "",
+                "placa": "",
+                "peso_caminhao": "",
+                "tara_caminhao": "",
+                "peso_bruto_carga": "",
+                "peso_liquido_carga": ""
+            }
+        ]
+
+    if st.button("➕ Adicionar Linha"):
+
+        st.session_state.linhas_chegada.append(
+            {
+                "data": "",
+                "nota": "",
+                "lote": "",
+                "fardos": "",
+                "peso_bruto": "",
+                "peso_liquido": "",
+                "tara": "",
+                "placa": "",
+                "peso_caminhao": "",
+                "tara_caminhao": "",
+                "peso_bruto_carga": "",
+                "peso_liquido_carga": ""
+            }
         )
 
-    except Exception as e:
+    cols = st.columns(len(headers))
 
-        st.error(
-            f"Erro ao gerar relatório: {e}"
+    for col, h in zip(cols, headers):
+        col.markdown(f"**{h}**")
+
+    for i, linha in enumerate(st.session_state.linhas_chegada):
+
+        cols = st.columns(len(headers))
+
+        keys = list(linha.keys())
+
+        for idx, key in enumerate(keys):
+            linha[key] = cols[idx].text_input(
+                "",
+                value=linha[key],
+                key=f"chegada_{key}_{i}"
+            )
+
+    # =====================================================
+    # GERAR RELATÓRIO
+    # =====================================================
+
+    if st.button("📥 Gerar Relatório Chegada"):
+
+        wb = load_workbook(TEMPLATE_PATH)
+
+        ws = wb["Peso Caminhão - Chegada"]
+
+        ws["B2"] = produtor
+        ws["B3"] = terminal
+
+        ws["F2"] = instrucao
+        ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+
+        ws["I2"] = inspetor
+
+        ws["I2"].font = Font(
+            name="Arial",
+            size=12,
+            bold=True,
+            color="000000"
+        )
+
+        ws["B26"] = observacao
+
+        ws["B26"].alignment = Alignment(
+            wrap_text=True,
+            vertical="top"
+        )
+
+        start_row = 6
+
+        for index, linha in enumerate(
+            st.session_state.linhas_chegada
+        ):
+
+            row = start_row + index
+
+            ws.cell(row=row, column=1).value = linha["data"]
+            ws.cell(row=row, column=2).value = linha["nota"]
+            ws.cell(row=row, column=3).value = linha["lote"]
+            ws.cell(row=row, column=4).value = linha["fardos"]
+            ws.cell(row=row, column=5).value = linha["peso_bruto"]
+            ws.cell(row=row, column=6).value = linha["peso_liquido"]
+            ws.cell(row=row, column=7).value = linha["tara"]
+            ws.cell(row=row, column=8).value = linha["placa"]
+            ws.cell(row=row, column=9).value = linha["peso_caminhao"]
+            ws.cell(row=row, column=10).value = linha["tara_caminhao"]
+            ws.cell(row=row, column=11).value = linha["peso_bruto_carga"]
+            ws.cell(row=row, column=12).value = linha["peso_liquido_carga"]
+
+        st.success("Relatório gerado com sucesso!")
+
+        download_excel(
+            wb,
+            f"relatorio_chegada_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        )
+
+# =========================================================
+# RELATÓRIO SAÍDA
+# =========================================================
+
+elif relatorio == "Peso Caminhão - Saída":
+
+    TEMPLATE_PATH = "Saida.xlsx"
+
+    st.title("📋 Peso Caminhão - Saída")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        produtor = st.text_input("Produtor")
+        terminal = st.text_input("Terminal")
+
+    with col2:
+        instrucao = st.text_input("Instrução")
+        data_relatorio = st.date_input(
+            "Data",
+            datetime.today()
+        )
+
+    with col3:
+        container = st.text_input("Container")
+        navio = st.text_input("Navio")
+
+    observacao = st.text_area(
+        "Observação",
+        height=120
+    )
+
+    headers = [
+        "DATA",
+        "NOTA FISCAL",
+        "LOTE",
+        "TOTAL FARDOS",
+        "TARA CNTR",
+        "MAX GROSS",
+        "HORÁRIO INÍCIO",
+        "HORÁRIO FINAL",
+        "PLACA"
+    ]
+
+    if "linhas_saida" not in st.session_state:
+
+        st.session_state.linhas_saida = [
+            {
+                "data": "",
+                "nota": "",
+                "lote": "",
+                "fardos": "",
+                "tara_cntr": "",
+                "max_gross": "",
+                "hora_inicio": "",
+                "hora_fim": "",
+                "placa": ""
+            }
+        ]
+
+    if st.button("➕ Adicionar Linha Saída"):
+
+        st.session_state.linhas_saida.append(
+            {
+                "data": "",
+                "nota": "",
+                "lote": "",
+                "fardos": "",
+                "tara_cntr": "",
+                "max_gross": "",
+                "hora_inicio": "",
+                "hora_fim": "",
+                "placa": ""
+            }
+        )
+
+    cols = st.columns(len(headers))
+
+    for col, h in zip(cols, headers):
+        col.markdown(f"**{h}**")
+
+    for i, linha in enumerate(st.session_state.linhas_saida):
+
+        cols = st.columns(len(headers))
+
+        keys = list(linha.keys())
+
+        for idx, key in enumerate(keys):
+            linha[key] = cols[idx].text_input(
+                "",
+                value=linha[key],
+                key=f"saida_{key}_{i}"
+            )
+
+    if st.button("📥 Gerar Relatório Saída"):
+
+        wb = load_workbook(TEMPLATE_PATH)
+
+        ws = wb["Peso Caminhão - Saída"]
+
+        ws["B2"] = produtor
+        ws["B3"] = terminal
+
+        ws["F2"] = instrucao
+        ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+
+        ws["I2"] = container
+        ws["I3"] = navio
+
+        ws["B26"] = observacao
+
+        start_row = 5
+
+        for index, linha in enumerate(
+            st.session_state.linhas_saida
+        ):
+
+            row = start_row + index
+
+            ws.cell(row=row, column=1).value = linha["data"]
+            ws.cell(row=row, column=2).value = linha["nota"]
+            ws.cell(row=row, column=3).value = linha["lote"]
+            ws.cell(row=row, column=4).value = linha["fardos"]
+            ws.cell(row=row, column=5).value = linha["tara_cntr"]
+            ws.cell(row=row, column=6).value = linha["max_gross"]
+            ws.cell(row=row, column=7).value = linha["hora_inicio"]
+            ws.cell(row=row, column=8).value = linha["hora_fim"]
+            ws.cell(row=row, column=9).value = linha["placa"]
+
+        st.success("Relatório gerado com sucesso!")
+
+        download_excel(
+            wb,
+            f"relatorio_saida_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        )
+
+# =========================================================
+# ESTUFAGEM
+# =========================================================
+
+elif relatorio == "Estufagem Individual":
+
+    TEMPLATE_PATH = "Estufagem.xlsx"
+
+    st.title("📋 Estufagem Individual")
+
+    instrucao = st.text_input(
+        "Instrução de Embarque"
+    )
+
+    produtor = st.text_input("Produtor")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        container = st.text_input("Nº Container")
+        tara_porta = st.text_input("Tara Porta Cntr")
+        terminal = st.text_input("Terminal")
+        inicio = st.text_input("Começo Estufagem")
+
+    with col2:
+        qtd_fardos = st.text_input("Qtd Fardos")
+        max_gross = st.text_input("Max Gross")
+        lacre = st.text_input("Lacre")
+        data_hora = st.text_input("Data/Hora Início")
+
+    observacao = st.text_area(
+        "Observação",
+        height=180
+    )
+
+    if st.button("📥 Gerar Relatório Estufagem"):
+
+        wb = load_workbook(TEMPLATE_PATH)
+
+        ws = wb["Estufagem individual"]
+
+        ws["B2"] = instrucao
+        ws["B3"] = produtor
+
+        ws["B4"] = container
+        ws["D4"] = qtd_fardos
+
+        ws["B5"] = tara_porta
+        ws["D5"] = max_gross
+
+        ws["B6"] = terminal
+        ws["D6"] = lacre
+
+        ws["B7"] = inicio
+        ws["D7"] = data_hora
+
+        ws["A33"] = observacao
+
+        ws["A33"].alignment = Alignment(
+            wrap_text=True,
+            vertical="top"
+        )
+
+        st.success("Relatório gerado com sucesso!")
+
+        download_excel(
+            wb,
+            f"relatorio_estufagem_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         )
