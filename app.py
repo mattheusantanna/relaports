@@ -217,25 +217,27 @@ elif relatorio == "Estufagem Individual":
 
     st.title("📋 Estufagem Individual")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     with col1:
         instrucao = st.text_input("Instrução de Embarque")
         produtor  = st.text_input("Produtor")
         container = st.text_input("Nº Container")
+        terminal  = st.text_input("Terminal")
+        inspetor  = st.text_input("Inspetor")
     with col2:
         tara_porta = st.text_input("Tara Porta Cntr")
         max_gross  = st.text_input("Max Gross")
         lacre      = st.text_input("Lacre")
-    with col3:
-        terminal = st.text_input("Terminal")
-        inicio   = st.text_input("Começo Estufagem")
-        termino  = st.text_input("Término Estufagem")
-        inspetor = st.text_input("Inspetor")
 
-    col4, col5 = st.columns(2)
+    st.markdown("**⏱️ Datas e Horários**")
+    col3, col4, col5, col6 = st.columns(4)
+    with col3:
+        inicio = st.text_input("Começo da Estufagem")
     with col4:
-        data_hora_inicio  = st.text_input("Data/Hora Início")
+        data_hora_inicio = st.text_input("Data/Hora Início")
     with col5:
+        termino = st.text_input("Término da Estufagem")
+    with col6:
         data_hora_termino = st.text_input("Data/Hora Término")
 
     st.divider()
