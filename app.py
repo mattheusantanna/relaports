@@ -573,13 +573,12 @@ elif relatorio == "Estufagem Individual":
         ws["B8"] = termino
         ws["D8"] = data_hora_termino
 
-        start_row = 11
 
         # =================================================
         # TABELA
         # =================================================
 
-        start_row = 12
+        start_row = 11
 
         for index, linha in enumerate(
             st.session_state.linhas_estufagem
