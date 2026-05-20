@@ -253,7 +253,7 @@ elif relatorio == "Peso Caminhão - Saída":
     with col3:
 
         limite_peso_cntr = st.text_input(
-            "Limite de Peso pro Cntr"
+            "Limite de Peso por Container"
         )
 
         limite_total_instrucao = st.text_input(
