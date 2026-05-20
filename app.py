@@ -57,10 +57,6 @@ if relatorio == "Peso Caminhão - Chegada":
 
     st.title("📋 Peso Caminhão - Chegada")
 
-    # =====================================================
-    # CAMPOS SUPERIORES
-    # =====================================================
-
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -84,10 +80,6 @@ if relatorio == "Peso Caminhão - Chegada":
     )
 
     st.divider()
-
-    # =====================================================
-    # TABELA
-    # =====================================================
 
     headers = [
         "DATA",
@@ -161,10 +153,6 @@ if relatorio == "Peso Caminhão - Chegada":
                 key=f"chegada_{key}_{i}"
             )
 
-    # =====================================================
-    # GERAR RELATÓRIO
-    # =====================================================
-
     if st.button("📥 Gerar Relatório Chegada"):
 
         wb = load_workbook(TEMPLATE_PATH)
@@ -236,10 +224,6 @@ elif relatorio == "Peso Caminhão - Saída":
 
     st.title("📋 Peso Caminhão - Saída")
 
-    # =====================================================
-    # CAMPOS SUPERIORES
-    # =====================================================
-
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -270,10 +254,6 @@ elif relatorio == "Peso Caminhão - Saída":
     )
 
     st.divider()
-
-    # =====================================================
-    # TABELA
-    # =====================================================
 
     headers = [
         "CONTAINER",
@@ -341,10 +321,6 @@ elif relatorio == "Peso Caminhão - Saída":
                 key=f"saida_{key}_{i}"
             )
 
-    # =====================================================
-    # GERAR RELATÓRIO
-    # =====================================================
-
     if st.button("📥 Gerar Relatório Saída"):
 
         wb = load_workbook(TEMPLATE_PATH)
@@ -403,10 +379,6 @@ elif relatorio == "Estufagem Individual":
 
     st.title("📋 Estufagem Individual")
 
-    # =====================================================
-    # CAMPOS SUPERIORES
-    # =====================================================
-
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -451,9 +423,9 @@ elif relatorio == "Estufagem Individual":
             "Término Estufagem"
         )
 
-    # =====================================================
-    # DATA / HORA
-    # =====================================================
+        inspetor = st.text_input(
+            "Inspetor"
+        )
 
     col4, col5 = st.columns(2)
 
@@ -470,10 +442,6 @@ elif relatorio == "Estufagem Individual":
         )
 
     st.divider()
-
-    # =====================================================
-    # BLOCO TABELA
-    # =====================================================
 
     st.subheader("📦 Dados da Estufagem")
 
@@ -530,18 +498,10 @@ elif relatorio == "Estufagem Individual":
                 key=f"estufagem_{key}_{i}"
             )
 
-    # =====================================================
-    # OBSERVAÇÃO FINAL
-    # =====================================================
-
     observacao = st.text_area(
         "Observação Final",
         height=180
     )
-
-    # =====================================================
-    # GERAR RELATÓRIO
-    # =====================================================
 
     if st.button(
         "📥 Gerar Relatório Estufagem"
@@ -550,10 +510,6 @@ elif relatorio == "Estufagem Individual":
         wb = load_workbook(TEMPLATE_PATH)
 
         ws = wb["Estufagem individual"]
-
-        # =================================================
-        # CAMPOS FIXOS
-        # =================================================
 
         ws["B2"] = instrucao
         ws["B3"] = produtor
@@ -573,10 +529,7 @@ elif relatorio == "Estufagem Individual":
         ws["B8"] = termino
         ws["D8"] = data_hora_termino
 
-
-        # =================================================
-        # TABELA
-        # =================================================
+        ws["A29"] = inspetor
 
         start_row = 11
 
@@ -586,34 +539,11 @@ elif relatorio == "Estufagem Individual":
 
             row = start_row + index
 
-            ws.cell(
-                row=row,
-                column=1
-            ).value = linha["nota_fiscal"]
-
-            ws.cell(
-                row=row,
-                column=2
-            ).value = linha["lote"]
-
-            ws.cell(
-                row=row,
-                column=3
-            ).value = linha["qtd_fardos"]
-
-            ws.cell(
-                row=row,
-                column=4
-            ).value = linha["peso"]
-
-            ws.cell(
-                row=row,
-                column=5
-            ).value = linha["obs"]
-
-        # =================================================
-        # OBSERVAÇÃO FINAL
-        # =================================================
+            ws.cell(row=row, column=1).value = linha["nota_fiscal"]
+            ws.cell(row=row, column=2).value = linha["lote"]
+            ws.cell(row=row, column=3).value = linha["qtd_fardos"]
+            ws.cell(row=row, column=4).value = linha["peso"]
+            ws.cell(row=row, column=5).value = linha["obs"]
 
         ws["B26"] = observacao
 
