@@ -202,8 +202,7 @@ def gerar_excel():
     ws["B3"] = terminal
     ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
 
-    # H4:H5 está mesclado
-    ws["H4"] = placa
+    ws["H5"] = placa
 
     # =========================================
     # ESTILOS
