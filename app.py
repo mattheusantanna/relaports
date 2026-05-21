@@ -328,8 +328,8 @@ def linha_vazia_chegada():
 def linha_vazia_saida():
     return {k: "" for k in [
         "container", "nota", "lote", "fardos",
-        "tara_cntr", "max_gross", "bruto_carga",
-        "hora_inicio", "hora_fim", "placa"
+        "tara_cntr", "max_gross",
+        "hora_inicio", "hora_fim", "data", "bruto_carga"
     ]}
 
 
@@ -520,8 +520,8 @@ elif "Saída" in relatorio:
 
     headers_sa = [
         "Container", "Nota Fiscal", "Lote", "Total Fardos",
-        "Tara Cntr", "Max Gross", "Bruto Carga",
-        "Horário Início", "Horário Final", "Placa"
+        "Tara Cntr", "Max Gross",
+        "Horário Início", "Horário Final", "Data", "Bruto Carga"
     ]
 
     col_headers(headers_sa)
