@@ -419,7 +419,6 @@ if "Chegada" in relatorio:
 
     headers_ch = [
         "Data", "Nota Fiscal", "Lote", "Qtd Fardos",
-        "Data", "Nota Fiscal", "Lote", "Qtd Fardos",
         "Peso Bruto", "Peso Líquido", "Tara", "Placa",
         "Peso Caminhão", "Tara Caminhão",
         "Bruto Carga", "Líquido Carga"
