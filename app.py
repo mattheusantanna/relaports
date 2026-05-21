@@ -549,8 +549,8 @@ elif "Saída" in relatorio:
 
         # Horário Início (coluna 6)
         try:
-            hora_inicio_val = datetime.strptime(linha["hora_inicio"], "%H:%M").time()
-        except (ValueError, TypeError):
+            hora_inicio_val = datetime.strptime(linha.get("hora_inicio", ""), "%H:%M").time()
+        except (ValueError, TypeError, KeyError):
             hora_inicio_val = datetime.now().time().replace(second=0, microsecond=0)
 
         hora_inicio = cols[6].time_input(
@@ -563,8 +563,8 @@ elif "Saída" in relatorio:
 
         # Horário Final (coluna 7)
         try:
-            hora_fim_val = datetime.strptime(linha["hora_fim"], "%H:%M").time()
-        except (ValueError, TypeError):
+            hora_fim_val = datetime.strptime(linha.get("hora_fim", ""), "%H:%M").time()
+        except (ValueError, TypeError, KeyError):
             hora_fim_val = datetime.now().time().replace(second=0, microsecond=0)
 
         hora_fim = cols[7].time_input(
@@ -577,8 +577,8 @@ elif "Saída" in relatorio:
 
         # Data (coluna 8)
         try:
-            data_val = datetime.strptime(linha["data"], "%d/%m/%Y").date()
-        except (ValueError, TypeError):
+            data_val = datetime.strptime(linha.get("data", ""), "%d/%m/%Y").date()
+        except (ValueError, TypeError, KeyError):
             data_val = date.today()
 
         data_sel = cols[8].date_input(
