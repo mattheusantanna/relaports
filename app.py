@@ -630,8 +630,8 @@ elif "Estufagem" in relatorio:
             ws["B2"] = instrucao
             ws["B3"] = produtor
             ws["B4"] = container
-            ws["D4"] = tara_porta
-            ws["B5"] = max_gross
+            ws["B5"] = tara_porta
+            ws["D5"] = max_gross
             ws["D6"] = lacre
             ws["B6"] = terminal
             ws["B7"] = inicio
