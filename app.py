@@ -32,8 +32,23 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #e8eaf0;
 }
 
-[data-testid="stIconMaterial"] {
-    display: none !important;
+/* Substitui o texto por um ícone visual */
+[data-testid="stSidebarCollapseButton"] button {
+    background: transparent !important;
+    border: none !important;
+    color: #3a445a !important;
+    font-size: 1.2rem !important;
+    transition: color 0.2s !important;
+}
+
+[data-testid="stSidebarCollapseButton"] button::after {
+    content: "‹" !important;
+    font-size: 1.4rem !important;
+    color: #3a445a !important;
+}
+
+[data-testid="stSidebarCollapseButton"] button:hover::after {
+    color: #e8eaf0 !important;
 }
 
 [data-testid="stAppViewContainer"] {
