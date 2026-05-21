@@ -9,552 +9,644 @@ from datetime import datetime
 # =========================================================
 
 st.set_page_config(
-    page_title="Sistema de Relatórios",
-    layout="wide"
+    page_title="Relatórios Operacionais",
+    page_icon="📋",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # =========================================================
-# MENU LATERAL
+# CSS CUSTOMIZADO
 # =========================================================
 
-st.sidebar.title("📋 Relatórios")
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
-relatorio = st.sidebar.radio(
-    "Selecione o relatório",
-    [
-        "Peso Caminhão - Chegada",
-        "Peso Caminhão - Saída",
-        "Estufagem Individual"
-    ]
-)
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #0f1117;
+    color: #e8eaf0;
+}
+
+[data-testid="stAppViewContainer"] {
+    background: #0f1117;
+}
+
+[data-testid="stMain"] {
+    background: #0f1117;
+}
+
+/* ── Sidebar ── */
+[data-testid="stSidebar"] {
+    background: #161b27 !important;
+    border-right: 1px solid #1e2535 !important;
+}
+
+[data-testid="stSidebar"] * {
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+[data-testid="stSidebar"] .stRadio label {
+    color: #8892a4 !important;
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 0 !important;
+    transition: color 0.2s !important;
+}
+
+[data-testid="stSidebar"] .stRadio label:hover {
+    color: #e8eaf0 !important;
+}
+
+/* ── Títulos ── */
+h1 {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.7rem !important;
+    color: #f0f2f8 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 0.2rem !important;
+}
+
+h2, h3 {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    color: #c8cedd !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* ── Inputs ── */
+[data-testid="stTextInput"] label,
+[data-testid="stTextArea"] label,
+[data-testid="stDateInput"] label {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #6b7a99 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.07em !important;
+    margin-bottom: 4px !important;
+}
+
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea,
+[data-testid="stDateInput"] input {
+    background: #1a2033 !important;
+    border: 1px solid #232d42 !important;
+    border-radius: 8px !important;
+    color: #e8eaf0 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+[data-testid="stTextInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus {
+    border-color: #3d7fff !important;
+    box-shadow: 0 0 0 3px rgba(61,127,255,0.12) !important;
+    outline: none !important;
+}
+
+[data-testid="stTextInput"] input::placeholder,
+[data-testid="stTextArea"] textarea::placeholder {
+    color: #3a445a !important;
+}
+
+/* ── Botões ── */
+[data-testid="stButton"] button {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    border-radius: 8px !important;
+    border: none !important;
+    transition: all 0.2s !important;
+    letter-spacing: 0.01em !important;
+}
+
+[data-testid="stButton"] button[kind="primary"],
+[data-testid="stButton"] button {
+    background: #1a2033 !important;
+    color: #8892a4 !important;
+    border: 1px solid #232d42 !important;
+    padding: 0.45rem 1rem !important;
+}
+
+[data-testid="stButton"] button:hover {
+    background: #232d42 !important;
+    color: #e8eaf0 !important;
+    border-color: #3d7fff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Botão de gerar relatório – destaque */
+.gerar-btn [data-testid="stButton"] button {
+    background: linear-gradient(135deg, #3d7fff 0%, #1a5cdb 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 0.6rem 1.8rem !important;
+    font-size: 0.92rem !important;
+    box-shadow: 0 4px 20px rgba(61,127,255,0.3) !important;
+}
+
+.gerar-btn [data-testid="stButton"] button:hover {
+    box-shadow: 0 6px 28px rgba(61,127,255,0.45) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ── Download button ── */
+[data-testid="stDownloadButton"] button {
+    background: linear-gradient(135deg, #00c97a 0%, #009958 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    padding: 0.6rem 1.8rem !important;
+    box-shadow: 0 4px 20px rgba(0,201,122,0.3) !important;
+    transition: all 0.2s !important;
+}
+
+[data-testid="stDownloadButton"] button:hover {
+    box-shadow: 0 6px 28px rgba(0,201,122,0.45) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ── Divider ── */
+hr {
+    border-color: #1e2535 !important;
+    margin: 1.5rem 0 !important;
+}
+
+/* ── Success / alerts ── */
+[data-testid="stAlert"] {
+    background: #0d2518 !important;
+    border: 1px solid #1a5c3a !important;
+    border-radius: 10px !important;
+    color: #4ade80 !important;
+}
+
+/* ── Container com borda (bloco datas) ── */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #141928 !important;
+    border: 1px solid #1e2a3e !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+}
+
+/* ── Markdown labels de coluna ── */
+.col-header p {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    color: #4a566e !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    margin-bottom: 4px !important;
+    padding-bottom: 6px !important;
+    border-bottom: 1px solid #1e2535 !important;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f1117; }
+::-webkit-scrollbar-thumb { background: #232d42; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3d7fff; }
+</style>
+""", unsafe_allow_html=True)
+
 
 # =========================================================
-# FUNÇÃO DOWNLOAD
+# HELPERS
 # =========================================================
+
+def badge(text: str, color: str = "#3d7fff"):
+    """Renderiza um badge colorido inline."""
+    st.markdown(
+        f'<span style="background:{color}22;color:{color};'
+        f'font-size:0.7rem;font-weight:700;letter-spacing:0.06em;'
+        f'text-transform:uppercase;padding:3px 10px;border-radius:20px;'
+        f'border:1px solid {color}44;">{text}</span>',
+        unsafe_allow_html=True
+    )
+
+
+def section_header(icon: str, title: str, subtitle: str = ""):
+    st.markdown(
+        f"""
+        <div style="margin-bottom:1.2rem;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+                <span style="font-size:1.3rem;">{icon}</span>
+                <h1 style="margin:0!important;">{title}</h1>
+            </div>
+            {"<p style='color:#4a566e;font-size:0.88rem;margin:0 0 0 2rem;'>"+subtitle+"</p>" if subtitle else ""}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+def col_headers(headers: list):
+    """Renderiza cabeçalhos de coluna estilizados."""
+    cols = st.columns(len(headers))
+    for col, h in zip(cols, headers):
+        col.markdown(
+            f'<div class="col-header"><p>{h}</p></div>',
+            unsafe_allow_html=True
+        )
+
 
 def download_excel(wb, nome_arquivo):
-
     output = BytesIO()
-
     wb.save(output)
-
     output.seek(0)
-
     st.download_button(
-        label="⬇️ Baixar Relatório",
+        label="⬇️  Baixar Relatório Excel",
         data=output,
         file_name=nome_arquivo,
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
+
+def linha_vazia_chegada():
+    return {k: "" for k in [
+        "data", "nota", "lote", "fardos",
+        "peso_bruto", "peso_liquido", "tara", "placa",
+        "peso_caminhao", "tara_caminhao",
+        "peso_bruto_carga", "peso_liquido_carga"
+    ]}
+
+
+def linha_vazia_saida():
+    return {k: "" for k in [
+        "container", "nota", "lote", "fardos",
+        "tara_cntr", "max_gross", "bruto_carga",
+        "hora_inicio", "hora_fim", "placa"
+    ]}
+
+
+def linha_vazia_estufagem():
+    return {k: "" for k in [
+        "nota_fiscal", "lote", "qtd_fardos", "peso", "obs"
+    ]}
+
+
+# =========================================================
+# SIDEBAR
+# =========================================================
+
+with st.sidebar:
+    st.markdown(
+        """
+        <div style="padding:1.2rem 0 1.8rem;">
+            <div style="font-size:1.5rem;font-weight:700;color:#f0f2f8;
+                        letter-spacing:-0.02em;margin-bottom:4px;">
+                ⚓ Relatórios
+            </div>
+            <div style="font-size:0.78rem;color:#3d4a63;font-weight:500;">
+                Sistema Operacional
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    relatorio = st.radio(
+        "Módulo",
+        [
+            "📥  Chegada",
+            "📤  Saída",
+            "📦  Estufagem"
+        ],
+        label_visibility="collapsed"
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:0.7rem;color:#2a3348;text-align:center;">'
+        'v2.0 · Operações Portuárias</div>',
+        unsafe_allow_html=True
+    )
+
+
 # =========================================================
 # RELATÓRIO CHEGADA
 # =========================================================
 
-if relatorio == "Peso Caminhão - Chegada":
+if "Chegada" in relatorio:
 
     TEMPLATE_PATH = "Chegada.xlsx"
 
-    st.title("📋 Peso Caminhão - Chegada")
+    section_header("📥", "Peso Caminhão — Chegada",
+                   "Registro de entrada e pesagem de carga")
 
-    col1, col2, col3 = st.columns(3)
+    badge("Chegada", "#3d7fff")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with col1:
-        produtor = st.text_input("Produtor")
-        terminal = st.text_input("Terminal")
+    # ── Campos de cabeçalho ──
+    with st.container():
+        c1, c2, c3 = st.columns([2, 2, 2])
+        with c1:
+            st.markdown("**Identificação**")
+            produtor = st.text_input("Produtor", placeholder="Nome do produtor")
+            terminal = st.text_input("Terminal", placeholder="Terminal de operação")
+        with c2:
+            st.markdown("**Documentação**")
+            instrucao = st.text_input("Instrução", placeholder="Nº da instrução")
+            data_relatorio = st.date_input("Data", datetime.today())
+        with c3:
+            st.markdown("**Responsável**")
+            inspetor = st.text_input("Inspetor", placeholder="Nome do inspetor")
 
-    with col2:
-        instrucao = st.text_input("Instrução")
-
-        data_relatorio = st.date_input(
-            "Data",
-            datetime.today()
-        )
-
-    with col3:
-        inspetor = st.text_input("Inspetor")
-
-    observacao = st.text_area(
-        "Observação",
-        height=120
-    )
+    observacao = st.text_area("Observação", height=90,
+                              placeholder="Registre aqui observações relevantes...")
 
     st.divider()
 
-    headers = [
-        "DATA",
-        "NOTA FISCAL",
-        "LOTE",
-        "QTD FARDOS",
-        "PESO BRUTO",
-        "PESO LÍQUIDO",
-        "TARA",
-        "PLACA",
-        "PESO CAMINHÃO",
-        "TARA CAMINHÃO",
-        "PESO BRUTO CARGA",
-        "PESO LÍQUIDO CARGA"
-    ]
+    # ── Tabela de dados ──
+    st.markdown("#### Registros de Pesagem")
 
     if "linhas_chegada" not in st.session_state:
+        st.session_state.linhas_chegada = [linha_vazia_chegada()]
 
-        st.session_state.linhas_chegada = [
-            {
-                "data": "",
-                "nota": "",
-                "lote": "",
-                "fardos": "",
-                "peso_bruto": "",
-                "peso_liquido": "",
-                "tara": "",
-                "placa": "",
-                "peso_caminhao": "",
-                "tara_caminhao": "",
-                "peso_bruto_carga": "",
-                "peso_liquido_carga": ""
-            }
-        ]
+    headers_ch = [
+        "Data", "Nota Fiscal", "Lote", "Qtd Fardos",
+        "Peso Bruto", "Peso Líquido", "Tara", "Placa",
+        "Peso Caminhão", "Tara Caminhão",
+        "Bruto Carga", "Líquido Carga"
+    ]
 
-    if st.button("➕ Adicionar Linha"):
-
-        st.session_state.linhas_chegada.append(
-            {
-                "data": "",
-                "nota": "",
-                "lote": "",
-                "fardos": "",
-                "peso_bruto": "",
-                "peso_liquido": "",
-                "tara": "",
-                "placa": "",
-                "peso_caminhao": "",
-                "tara_caminhao": "",
-                "peso_bruto_carga": "",
-                "peso_liquido_carga": ""
-            }
-        )
-
-    cols = st.columns(len(headers))
-
-    for col, h in zip(cols, headers):
-        col.markdown(f"**{h}**")
+    col_headers(headers_ch)
 
     for i, linha in enumerate(st.session_state.linhas_chegada):
-
-        cols = st.columns(len(headers))
-
-        keys = list(linha.keys())
-
-        for idx, key in enumerate(keys):
-
+        cols = st.columns(len(headers_ch))
+        for idx, key in enumerate(linha.keys()):
             linha[key] = cols[idx].text_input(
-                "",
-                value=linha[key],
-                key=f"chegada_{key}_{i}"
+                "", value=linha[key],
+                key=f"chegada_{key}_{i}",
+                label_visibility="collapsed"
             )
 
-    if st.button("📥 Gerar Relatório Chegada"):
+    c_add, c_spacer = st.columns([1, 5])
+    with c_add:
+        if st.button("＋  Adicionar linha", key="add_chegada"):
+            st.session_state.linhas_chegada.append(linha_vazia_chegada())
+            st.rerun()
 
-        wb = load_workbook(TEMPLATE_PATH)
+    st.divider()
 
-        ws = wb["Peso Caminhão - Chegada"]
+    # ── Gerar ──
+    col_btn, _ = st.columns([2, 5])
+    with col_btn:
+        st.markdown('<div class="gerar-btn">', unsafe_allow_html=True)
+        gerar = st.button("📥  Gerar Relatório", key="gerar_chegada", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        ws["B2"] = produtor
-        ws["B3"] = terminal
+    if gerar:
+        try:
+            wb = load_workbook(TEMPLATE_PATH)
+            ws = wb["Peso Caminhão - Chegada"]
 
-        ws["F2"] = instrucao
-        ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+            ws["B2"] = produtor
+            ws["B3"] = terminal
+            ws["F2"] = instrucao
+            ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+            ws["I2"] = inspetor
+            ws["I2"].font = Font(name="Arial", size=12, bold=True, color="000000")
+            ws["I2"].alignment = Alignment(horizontal="center", vertical="center")
+            ws["B26"] = observacao
+            ws["B26"].alignment = Alignment(wrap_text=True, vertical="top")
 
-        ws["I2"] = inspetor
+            for idx, linha in enumerate(st.session_state.linhas_chegada):
+                row = 6 + idx
+                vals = list(linha.values())
+                for col_i, val in enumerate(vals, start=1):
+                    ws.cell(row=row, column=col_i).value = val
 
-        ws["I2"].font = Font(
-            name="Arial",
-            size=12,
-            bold=True,
-            color="000000"
-        )
+            st.success("✅  Relatório gerado com sucesso!")
+            download_excel(wb,
+                f"chegada_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
+        except FileNotFoundError:
+            st.error("⚠️  Template 'Chegada.xlsx' não encontrado.")
 
-        ws["I2"].alignment = Alignment(
-            horizontal="center",
-            vertical="center"
-        )
-
-        ws["B26"] = observacao
-
-        ws["B26"].alignment = Alignment(
-            wrap_text=True,
-            vertical="top"
-        )
-
-        start_row = 6
-
-        for index, linha in enumerate(
-            st.session_state.linhas_chegada
-        ):
-
-            row = start_row + index
-
-            ws.cell(row=row, column=1).value = linha["data"]
-            ws.cell(row=row, column=2).value = linha["nota"]
-            ws.cell(row=row, column=3).value = linha["lote"]
-            ws.cell(row=row, column=4).value = linha["fardos"]
-            ws.cell(row=row, column=5).value = linha["peso_bruto"]
-            ws.cell(row=row, column=6).value = linha["peso_liquido"]
-            ws.cell(row=row, column=7).value = linha["tara"]
-            ws.cell(row=row, column=8).value = linha["placa"]
-            ws.cell(row=row, column=9).value = linha["peso_caminhao"]
-            ws.cell(row=row, column=10).value = linha["tara_caminhao"]
-            ws.cell(row=row, column=11).value = linha["peso_bruto_carga"]
-            ws.cell(row=row, column=12).value = linha["peso_liquido_carga"]
-
-        st.success("Relatório gerado com sucesso!")
-
-        download_excel(
-            wb,
-            f"relatorio_chegada_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-        )
 
 # =========================================================
 # RELATÓRIO SAÍDA
 # =========================================================
 
-elif relatorio == "Peso Caminhão - Saída":
+elif "Saída" in relatorio:
 
     TEMPLATE_PATH = "Saida.xlsx"
 
-    st.title("📋 Peso Caminhão - Saída")
+    section_header("📤", "Peso Caminhão — Saída",
+                   "Controle de saída e pesagem de containers")
 
-    col1, col2, col3 = st.columns(3)
+    badge("Saída", "#f59e0b")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with col1:
-        produtor = st.text_input("Produtor")
-        terminal = st.text_input("Terminal")
+    c1, c2, c3 = st.columns([2, 2, 2])
+    with c1:
+        st.markdown("**Identificação**")
+        produtor = st.text_input("Produtor", placeholder="Nome do produtor")
+        terminal = st.text_input("Terminal", placeholder="Terminal de operação")
+    with c2:
+        st.markdown("**Documentação**")
+        instrucao = st.text_input("Instrução", placeholder="Nº da instrução")
+        data_relatorio = st.date_input("Data", datetime.today())
+    with c3:
+        st.markdown("**Limites de Peso**")
+        limite_peso_cntr = st.text_input("Limite por Container",
+                                         placeholder="kg")
+        limite_total_instrucao = st.text_input("Limite Total da Instrução",
+                                               placeholder="kg")
 
-    with col2:
-        instrucao = st.text_input("Instrução")
-
-        data_relatorio = st.date_input(
-            "Data",
-            datetime.today()
-        )
-
-    with col3:
-
-        limite_peso_cntr = st.text_input(
-            "Limite de Peso pro Cntr"
-        )
-
-        limite_total_instrucao = st.text_input(
-            "Limite de Peso Total da Instrução"
-        )
-
-    observacao = st.text_area(
-        "Observação",
-        height=120
-    )
+    observacao = st.text_area("Observação", height=90,
+                              placeholder="Registre aqui observações relevantes...")
 
     st.divider()
 
-    headers = [
-        "CONTAINER",
-        "NOTA FISCAL",
-        "LOTE",
-        "TOTAL FARDOS",
-        "TARA CNTR",
-        "MAX GROSS",
-        "BRUTO CARGA",
-        "HORÁRIO INÍCIO",
-        "HORÁRIO FINAL",
-        "PLACA"
-    ]
+    st.markdown("#### Registros de Saída")
 
     if "linhas_saida" not in st.session_state:
+        st.session_state.linhas_saida = [linha_vazia_saida()]
 
-        st.session_state.linhas_saida = [
-            {
-                "container": "",
-                "nota": "",
-                "lote": "",
-                "fardos": "",
-                "tara_cntr": "",
-                "max_gross": "",
-                "bruto_carga": "",
-                "hora_inicio": "",
-                "hora_fim": "",
-                "placa": ""
-            }
-        ]
+    headers_sa = [
+        "Container", "Nota Fiscal", "Lote", "Total Fardos",
+        "Tara Cntr", "Max Gross", "Bruto Carga",
+        "Horário Início", "Horário Final", "Placa"
+    ]
 
-    if st.button("➕ Adicionar Linha Saída"):
-
-        st.session_state.linhas_saida.append(
-            {
-                "container": "",
-                "nota": "",
-                "lote": "",
-                "fardos": "",
-                "tara_cntr": "",
-                "max_gross": "",
-                "bruto_carga": "",
-                "hora_inicio": "",
-                "hora_fim": "",
-                "placa": ""
-            }
-        )
-
-    cols = st.columns(len(headers))
-
-    for col, h in zip(cols, headers):
-        col.markdown(f"**{h}**")
+    col_headers(headers_sa)
 
     for i, linha in enumerate(st.session_state.linhas_saida):
-
-        cols = st.columns(len(headers))
-
-        keys = list(linha.keys())
-
-        for idx, key in enumerate(keys):
-
+        cols = st.columns(len(headers_sa))
+        for idx, key in enumerate(linha.keys()):
             linha[key] = cols[idx].text_input(
-                "",
-                value=linha[key],
-                key=f"saida_{key}_{i}"
+                "", value=linha[key],
+                key=f"saida_{key}_{i}",
+                label_visibility="collapsed"
             )
 
-    if st.button("📥 Gerar Relatório Saída"):
+    c_add, _ = st.columns([1, 5])
+    with c_add:
+        if st.button("＋  Adicionar linha", key="add_saida"):
+            st.session_state.linhas_saida.append(linha_vazia_saida())
+            st.rerun()
 
-        wb = load_workbook(TEMPLATE_PATH)
+    st.divider()
 
-        ws = wb["Peso Caminhão - Saída"]
+    col_btn, _ = st.columns([2, 5])
+    with col_btn:
+        st.markdown('<div class="gerar-btn">', unsafe_allow_html=True)
+        gerar = st.button("📤  Gerar Relatório", key="gerar_saida", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        ws["B2"] = produtor
-        ws["B3"] = terminal
+    if gerar:
+        try:
+            wb = load_workbook(TEMPLATE_PATH)
+            ws = wb["Peso Caminhão - Saída"]
 
-        ws["F2"] = instrucao
-        ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+            ws["B2"] = produtor
+            ws["B3"] = terminal
+            ws["F2"] = instrucao
+            ws["F3"] = data_relatorio.strftime("%d/%m/%Y")
+            ws["I2"] = limite_peso_cntr
+            ws["I3"] = limite_total_instrucao
+            ws["B26"] = observacao
+            ws["B26"].alignment = Alignment(wrap_text=True, vertical="top")
 
-        ws["I2"] = limite_peso_cntr
-        ws["I3"] = limite_total_instrucao
+            for idx, linha in enumerate(st.session_state.linhas_saida):
+                row = 5 + idx
+                for col_i, val in enumerate(linha.values(), start=1):
+                    ws.cell(row=row, column=col_i).value = val
 
-        ws["B26"] = observacao
+            st.success("✅  Relatório gerado com sucesso!")
+            download_excel(wb,
+                f"saida_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
+        except FileNotFoundError:
+            st.error("⚠️  Template 'Saida.xlsx' não encontrado.")
 
-        ws["B26"].alignment = Alignment(
-            wrap_text=True,
-            vertical="top"
-        )
-
-        start_row = 5
-
-        for index, linha in enumerate(
-            st.session_state.linhas_saida
-        ):
-
-            row = start_row + index
-
-            ws.cell(row=row, column=1).value = linha["container"]
-            ws.cell(row=row, column=2).value = linha["nota"]
-            ws.cell(row=row, column=3).value = linha["lote"]
-            ws.cell(row=row, column=4).value = linha["fardos"]
-            ws.cell(row=row, column=5).value = linha["tara_cntr"]
-            ws.cell(row=row, column=6).value = linha["max_gross"]
-            ws.cell(row=row, column=7).value = linha["bruto_carga"]
-            ws.cell(row=row, column=8).value = linha["hora_inicio"]
-            ws.cell(row=row, column=9).value = linha["hora_fim"]
-            ws.cell(row=row, column=10).value = linha["placa"]
-
-        st.success("Relatório gerado com sucesso!")
-
-        download_excel(
-            wb,
-            f"relatorio_saida_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-        )
 
 # =========================================================
 # ESTUFAGEM
 # =========================================================
 
-elif relatorio == "Estufagem Individual":
+elif "Estufagem" in relatorio:
 
     TEMPLATE_PATH = "Estufagem.xlsx"
 
-    st.title("📋 Estufagem Individual")
+    section_header("📦", "Estufagem Individual",
+                   "Controle de estufagem e lacre de containers")
 
-    col1, col2, col3 = st.columns(3)
+    badge("Estufagem", "#10b981")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with col1:
+    # ── Campos de cabeçalho ──
+    c1, c2, c3 = st.columns([2, 2, 2])
+    with c1:
+        st.markdown("**Identificação**")
+        instrucao  = st.text_input("Instrução de Embarque", placeholder="Nº instrução")
+        produtor   = st.text_input("Produtor", placeholder="Nome do produtor")
+        container  = st.text_input("Nº Container", placeholder="Ex: TCKU1234567")
+    with c2:
+        st.markdown("**Dados Técnicos**")
+        tara_porta = st.text_input("Tara Porta Cntr", placeholder="kg")
+        max_gross  = st.text_input("Max Gross", placeholder="kg")
+        lacre      = st.text_input("Lacre", placeholder="Nº do lacre")
+    with c3:
+        st.markdown("**Local & Responsável**")
+        terminal   = st.text_input("Terminal", placeholder="Terminal de operação")
 
-        instrucao = st.text_input(
-            "Instrução de Embarque"
-        )
-
-        produtor = st.text_input(
-            "Produtor"
-        )
-
-        container = st.text_input(
-            "Nº Container"
-        )
-
-    with col2:
-
-        tara_porta = st.text_input(
-            "Tara Porta Cntr"
-        )
-
-        max_gross = st.text_input(
-            "Max Gross"
-        )
-
-        lacre = st.text_input(
-            "Lacre"
-        )
-
-    with col3:
-
-        terminal = st.text_input(
-            "Terminal"
-        )
-
-    # ── Bloco: Estufagem + Data/Hora ──────────────────────
+    # ── Bloco datas/horários ──
+    st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("**🕐 Datas e Horários da Estufagem**")
 
     with st.container(border=True):
-
-        col_a, col_b, col_c, col_d = st.columns(4)
-
-        with col_a:
-            inicio = st.text_input("Começo Estufagem")
-
-        with col_b:
-            data_hora = st.text_input("Data/Hora Início")
-
-        with col_c:
-            termino = st.text_input("Término Estufagem")
-
-        with col_d:
-            data_hora_termino = st.text_input("Data/Hora Término")
+        ca, cb, cc, cd = st.columns(4)
+        with ca:
+            inicio           = st.text_input("Começo Estufagem",  placeholder="HH:MM")
+        with cb:
+            data_hora        = st.text_input("Data/Hora Início",  placeholder="DD/MM/AAAA HH:MM")
+        with cc:
+            termino          = st.text_input("Término Estufagem", placeholder="HH:MM")
+        with cd:
+            data_hora_termino = st.text_input("Data/Hora Término", placeholder="DD/MM/AAAA HH:MM")
 
     st.divider()
 
-    st.subheader("📦 Dados da Estufagem")
-
-    headers = [
-        "NOTA FISCAL",
-        "LOTE",
-        "QTD FARDOS",
-        "PESO",
-        "OBS."
-    ]
+    # ── Tabela ──
+    st.markdown("#### 📦 Dados da Estufagem")
 
     if "linhas_estufagem" not in st.session_state:
+        st.session_state.linhas_estufagem = [linha_vazia_estufagem()]
 
-        st.session_state.linhas_estufagem = [
-            {
-                "nota_fiscal": "",
-                "lote": "",
-                "qtd_fardos": "",
-                "peso": "",
-                "obs": ""
-            }
-        ]
+    headers_es = ["Nota Fiscal", "Lote", "Qtd Fardos", "Peso", "Obs."]
+    col_headers(headers_es)
 
-    if st.button("➕ Adicionar Linha Estufagem"):
-
-        st.session_state.linhas_estufagem.append(
-            {
-                "nota_fiscal": "",
-                "lote": "",
-                "qtd_fardos": "",
-                "peso": "",
-                "obs": ""
-            }
-        )
-
-    cols = st.columns(len(headers))
-
-    for col, h in zip(cols, headers):
-        col.markdown(f"**{h}**")
-
-    for i, linha in enumerate(
-        st.session_state.linhas_estufagem
-    ):
-
-        cols = st.columns(len(headers))
-
-        keys = list(linha.keys())
-
-        for idx, key in enumerate(keys):
-
+    for i, linha in enumerate(st.session_state.linhas_estufagem):
+        cols = st.columns(len(headers_es))
+        for idx, key in enumerate(linha.keys()):
             linha[key] = cols[idx].text_input(
-                "",
-                value=linha[key],
-                key=f"estufagem_{key}_{i}"
+                "", value=linha[key],
+                key=f"estufagem_{key}_{i}",
+                label_visibility="collapsed"
             )
+
+    c_add, _ = st.columns([1, 5])
+    with c_add:
+        if st.button("＋  Adicionar linha", key="add_estufagem"):
+            st.session_state.linhas_estufagem.append(linha_vazia_estufagem())
+            st.rerun()
 
     st.divider()
 
-    # ── Inspetor antes da Observação ──────────────────────
-    inspetor = st.text_input("Inspetor")
+    # ── Inspetor + Observação ──
+    c_ins, _ = st.columns([2, 4])
+    with c_ins:
+        inspetor = st.text_input("Inspetor", placeholder="Nome do inspetor responsável")
 
-    observacao = st.text_area(
-        "Observação Final",
-        height=180
-    )
+    observacao = st.text_area("Observação Final", height=120,
+                              placeholder="Registre aqui observações finais sobre a estufagem...")
 
-    if st.button(
-        "📥 Gerar Relatório Estufagem"
-    ):
+    st.markdown("<br>", unsafe_allow_html=True)
 
-        wb = load_workbook(TEMPLATE_PATH)
+    col_btn, _ = st.columns([2, 5])
+    with col_btn:
+        st.markdown('<div class="gerar-btn">', unsafe_allow_html=True)
+        gerar = st.button("📦  Gerar Relatório", key="gerar_estufagem", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        ws = wb["Estufagem individual"]
+    if gerar:
+        try:
+            wb = load_workbook(TEMPLATE_PATH)
+            ws = wb["Estufagem individual"]
 
-        ws["B2"] = instrucao
-        ws["B3"] = produtor
+            ws["B2"] = instrucao
+            ws["B3"] = produtor
+            ws["B4"] = container
+            ws["D4"] = tara_porta
+            ws["B5"] = max_gross
+            ws["D5"] = lacre
+            ws["B6"] = terminal
+            ws["D6"] = data_hora
+            ws["B7"] = inicio
+            ws["D7"] = data_hora
+            ws["B8"] = termino
+            ws["D8"] = data_hora_termino
+            ws["A29"] = inspetor
 
-        ws["B4"] = container
-        ws["D4"] = tara_porta
+            for idx, linha in enumerate(st.session_state.linhas_estufagem):
+                row = 11 + idx
+                for col_i, val in enumerate(linha.values(), start=1):
+                    ws.cell(row=row, column=col_i).value = val
 
-        ws["B5"] = max_gross
-        ws["D5"] = lacre
+            ws["B26"] = observacao
+            ws["B26"].alignment = Alignment(wrap_text=True, vertical="top")
 
-        ws["B6"] = terminal
-        ws["D6"] = data_hora
-
-        ws["B7"] = inicio
-        ws["D7"] = data_hora
-
-        ws["B8"] = termino
-        ws["D8"] = data_hora_termino
-
-        ws["A29"] = inspetor
-
-        start_row = 11
-
-        for index, linha in enumerate(
-            st.session_state.linhas_estufagem
-        ):
-
-            row = start_row + index
-
-            ws.cell(row=row, column=1).value = linha["nota_fiscal"]
-            ws.cell(row=row, column=2).value = linha["lote"]
-            ws.cell(row=row, column=3).value = linha["qtd_fardos"]
-            ws.cell(row=row, column=4).value = linha["peso"]
-            ws.cell(row=row, column=5).value = linha["obs"]
-
-        ws["B26"] = observacao
-
-        ws["B26"].alignment = Alignment(
-            wrap_text=True,
-            vertical="top"
-        )
-
-        st.success(
-            "Relatório gerado com sucesso!"
-        )
-
-        download_excel(
-            wb,
-            f"relatorio_estufagem_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-        )
+            st.success("✅  Relatório gerado com sucesso!")
+            download_excel(wb,
+                f"estufagem_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
+        except FileNotFoundError:
+            st.error("⚠️  Template 'Estufagem.xlsx' não encontrado.")
