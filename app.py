@@ -32,22 +32,21 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #e8eaf0;
 }
 
-/* Substitui o texto por um ícone visual */
-[data-testid="stSidebarCollapseButton"] button {
-    background: transparent !important;
-    border: none !important;
-    color: #3a445a !important;
-    font-size: 1.2rem !important;
-    transition: color 0.2s !important;
+/* Esconde o texto em AMBOS os estados (aberto e fechado) */
+[data-testid="stIconMaterial"] {
+    display: none !important;
 }
 
-[data-testid="stSidebarCollapseButton"] button::after {
-    content: "‹" !important;
+/* Adiciona ícone visual no botão de reabrir */
+[data-testid="stSidebarCollapseButton"] button::after,
+[data-testid="collapsedControl"] button::after {
+    content: "›" !important;
     font-size: 1.4rem !important;
     color: #3a445a !important;
 }
 
-[data-testid="stSidebarCollapseButton"] button:hover::after {
+[data-testid="stSidebarCollapseButton"] button:hover::after,
+[data-testid="collapsedControl"] button:hover::after {
     color: #e8eaf0 !important;
 }
 
