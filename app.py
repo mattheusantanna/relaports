@@ -564,15 +564,44 @@ elif "Estufagem" in relatorio:
     st.markdown("**🕐 Datas e Horários da Estufagem**")
 
     with st.container(border=True):
-        ca, cb, cc, cd = st.columns(4)
-        with ca:
-            inicio           = st.text_input("Começo Estufagem",  placeholder="HH:MM")
-        with cb:
-            data_hora        = st.text_input("Data/Hora Início",  placeholder="DD/MM/AAAA HH:MM")
-        with cc:
-            termino          = st.text_input("Término Estufagem", placeholder="HH:MM")
-        with cd:
-            data_hora_termino = st.text_input("Data/Hora Término", placeholder="DD/MM/AAAA HH:MM")
+
+    ca, cb, cc, cd = st.columns(4)
+
+    with ca:
+
+        data_inicio = st.date_input(
+            "Data Início",
+            datetime.today(), placeholder="HH:MM"
+        )
+
+        inicio = st.time_input(
+            "Horário Início",
+            value=datetime.now().time(), placeholder="DD/MM/AAAA HH:MM"
+        )
+
+    with cb:
+
+        data_termino = st.date_input(
+            "Data Término",
+            datetime.today(), placeholder="HH:MM"
+        )
+
+        termino = st.time_input(
+            "Horário Término",
+            value=datetime.now().time(), placeholder="DD/MM/AAAA HH:MM"
+        )
+
+    # FORMATAR AUTOMATICAMENTE
+
+    data_hora = (
+        f"{data_inicio.strftime('%d/%m/%Y')} "
+        f"{inicio.strftime('%H:%M')}"
+    )
+
+    data_hora_termino = (
+        f"{data_termino.strftime('%d/%m/%Y')} "
+        f"{termino.strftime('%H:%M')}"
+    )
 
     st.divider()
 
