@@ -32,7 +32,7 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #e8eaf0;
 }
 
-[data-testid="collapsedControl"] span {
+[data-testid="stIconMaterial"] {
     display: none !important;
 }
 
