@@ -560,10 +560,11 @@ elif "Estufagem" in relatorio:
         terminal   = st.text_input("Terminal", placeholder="Terminal de operação")
 
     # ── Bloco datas/horários ──
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("**🕐 Datas e Horários da Estufagem**")
+    # ── Bloco datas/horários ──
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("**🕐 Datas e Horários da Estufagem**")
 
-    with st.container(border=True):
+with st.container(border=True):
 
     ca, cb, cc, cd = st.columns(4)
 
@@ -590,8 +591,6 @@ elif "Estufagem" in relatorio:
             "Horário Término",
             value=datetime.now().time()
         )
-
-    # FORMATAR AUTOMATICAMENTE
 
     data_hora = (
         f"{data_inicio.strftime('%d/%m/%Y')} "
