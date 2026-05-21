@@ -319,8 +319,8 @@ def download_excel(wb, nome_arquivo):
 def linha_vazia_chegada():
     return {k: "" for k in [
         "data", "nota", "lote", "fardos",
-        "peso_bruto", "peso_liquido", "tara", "placa",
-        "peso_caminhao", "tara_caminhao",
+        "peso_bruto", "peso_liquido", "tara",
+        "placa", "peso_caminhao", "tara_caminhao",
         "peso_bruto_carga", "peso_liquido_carga"
     ]}
 
@@ -417,23 +417,70 @@ if "Chegada" in relatorio:
     if "linhas_chegada" not in st.session_state:
         st.session_state.linhas_chegada = [linha_vazia_chegada()]
 
-    headers_ch = [
-        "Data", "Nota Fiscal", "Lote", "Qtd Fardos",
-        "Peso Bruto", "Peso Líquido", "Tara", "Placa",
-        "Peso Caminhão", "Tara Caminhão",
-        "Bruto Carga", "Líquido Carga"
-    ]
+    # ── Cabeçalhos separados por bloco ──
+    keys_nf = ["data", "nota", "lote", "fardos", "peso_bruto", "peso_liquido", "tara"]
+    keys_ca = ["placa", "peso_caminhao", "tara_caminhao", "peso_bruto_carga", "peso_liquido_carga"]
 
-    col_headers(headers_ch)
+    headers_nf = ["Data", "Nota Fiscal", "Lote", "Qtd Fardos", "Peso Bruto", "Peso Líquido", "Tara"]
+    headers_ca = ["Placa", "Peso Caminhão", "Tara Caminhão", "Bruto Carga", "Líquido Carga"]
 
+    col_left, col_div, col_right = st.columns([7, 0.3, 5])
+
+    with col_left:
+        st.markdown(
+            '<div style="background:#1a2a3a;border:1px solid #1e4060;border-radius:8px 8px 0 0;'
+            'padding:6px 12px;font-size:0.72rem;font-weight:700;color:#3d7fff;'
+            'text-transform:uppercase;letter-spacing:0.08em;">📄 Dados da Nota Fiscal</div>',
+            unsafe_allow_html=True
+        )
+        h_cols = st.columns(7)
+        for col, h in zip(h_cols, headers_nf):
+            col.markdown(f'<div class="col-header"><p>{h}</p></div>', unsafe_allow_html=True)
+
+    with col_div:
+        st.markdown(
+            '<div style="width:1px;background:#1e2535;height:100%;margin:0 auto;"></div>',
+            unsafe_allow_html=True
+        )
+
+    with col_right:
+        st.markdown(
+            '<div style="background:#1a2a1a;border:1px solid #1e4a1e;border-radius:8px 8px 0 0;'
+            'padding:6px 12px;font-size:0.72rem;font-weight:700;color:#10b981;'
+            'text-transform:uppercase;letter-spacing:0.08em;">🚛 Dados do Caminhão / Peso</div>',
+            unsafe_allow_html=True
+        )
+        h_cols2 = st.columns(5)
+        for col, h in zip(h_cols2, headers_ca):
+            col.markdown(f'<div class="col-header"><p>{h}</p></div>', unsafe_allow_html=True)
+
+    # ── Linhas de dados ──
     for i, linha in enumerate(st.session_state.linhas_chegada):
-        cols = st.columns(len(headers_ch))
-        for idx, key in enumerate(linha.keys()):
-            linha[key] = cols[idx].text_input(
-                "", value=linha[key],
-                key=f"chegada_{key}_{i}",
-                label_visibility="collapsed"
+        col_left, col_div, col_right = st.columns([7, 0.3, 5])
+
+        with col_left:
+            nf_cols = st.columns(7)
+            for idx, key in enumerate(keys_nf):
+                linha[key] = nf_cols[idx].text_input(
+                    "", value=linha.get(key, ""),
+                    key=f"chegada_{key}_{i}",
+                    label_visibility="collapsed"
+                )
+
+        with col_div:
+            st.markdown(
+                '<div style="width:1px;background:#1e2535;height:100%;margin:0 auto;"></div>',
+                unsafe_allow_html=True
             )
+
+        with col_right:
+            ca_cols = st.columns(5)
+            for idx, key in enumerate(keys_ca):
+                linha[key] = ca_cols[idx].text_input(
+                    "", value=linha.get(key, ""),
+                    key=f"chegada_{key}_{i}",
+                    label_visibility="collapsed"
+                )
 
     c_add, c_spacer = st.columns([1, 5])
     with c_add:
