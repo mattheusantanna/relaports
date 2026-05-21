@@ -632,9 +632,8 @@ elif "Estufagem" in relatorio:
             ws["B4"] = container
             ws["D4"] = tara_porta
             ws["B5"] = max_gross
-            ws["D5"] = lacre
+            ws["D6"] = lacre
             ws["B6"] = terminal
-            ws["D6"] = data_hora
             ws["B7"] = inicio
             ws["D7"] = data_hora
             ws["B8"] = termino
