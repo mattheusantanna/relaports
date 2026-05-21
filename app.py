@@ -32,6 +32,10 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #e8eaf0;
 }
 
+[data-testid="collapsedControl"] span {
+    display: none !important;
+}
+
 [data-testid="stAppViewContainer"] {
     background: #0f1117;
 }
@@ -124,10 +128,6 @@ h2, h3 {
     border: none !important;
     transition: all 0.2s !important;
     letter-spacing: 0.01em !important;
-}
-
-[data-testid="collapsedControl"] span {
-    display: none !important;
 }
 
 [data-testid="stButton"] button[kind="primary"],
