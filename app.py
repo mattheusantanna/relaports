@@ -558,6 +558,7 @@ elif "Estufagem" in relatorio:
     with c3:
         st.markdown("**Local & Responsável**")
         terminal   = st.text_input("Terminal", placeholder="Terminal de operação")
+        qtd_fardos_total  = st.text_input("Qtd Total de Fardos", placeholder="Total")
 
     # ── Bloco datas/horários ──
     st.markdown("<br>", unsafe_allow_html=True)
