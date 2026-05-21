@@ -571,24 +571,24 @@ elif "Estufagem" in relatorio:
 
         data_inicio = st.date_input(
             "Data Início",
-            datetime.today(), placeholder="HH:MM"
+            datetime.today()
         )
 
         inicio = st.time_input(
             "Horário Início",
-            value=datetime.now().time(), placeholder="DD/MM/AAAA HH:MM"
+            value=datetime.now().time()
         )
 
     with cb:
 
         data_termino = st.date_input(
             "Data Término",
-            datetime.today(), placeholder="HH:MM"
+            datetime.today()
         )
 
         termino = st.time_input(
             "Horário Término",
-            value=datetime.now().time(), placeholder="DD/MM/AAAA HH:MM"
+            value=datetime.now().time()
         )
 
     # FORMATAR AUTOMATICAMENTE
