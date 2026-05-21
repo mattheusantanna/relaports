@@ -328,8 +328,7 @@ def linha_vazia_chegada():
 def linha_vazia_saida():
     return {k: "" for k in [
         "container", "nota", "lote", "fardos",
-        "tara_cntr", "max_gross",
-        "hora_inicio", "hora_fim", "data", "bruto_carga"
+        "tara_cntr", "max_gross", "bruto_carga"
     ]}
 
 
@@ -477,7 +476,6 @@ if "Chegada" in relatorio:
         except FileNotFoundError:
             st.error("⚠️  Template 'Chegada.xlsx' não encontrado.")
 
-
 # =========================================================
 # RELATÓRIO SAÍDA
 # =========================================================
@@ -520,9 +518,29 @@ elif "Saída" in relatorio:
 
     headers_sa = [
         "Container", "Nota Fiscal", "Lote", "Total Fardos",
-        "Tara Cntr", "Max Gross",
-        "Horário Início", "Horário Final", "Data", "Bruto Carga"
+        "Tara Cntr", "Max Gross", "Bruto Carga"
     ]
+
+    # ── Bloco datas/horários ──
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("**🕐 Datas e Horários**")
+
+    with st.container(border=True):
+        ca, cb, cc, cd = st.columns(4)
+        with ca:
+            hora_inicio = st.time_input("Horário Início", value=datetime.now().time(), key="saida_hora_inicio")
+            saida_inicio = hora_inicio.strftime("%H:%M")
+        with cb:
+            data_inicio_saida = st.date_input("Data Início", datetime.today(), key="saida_data_inicio")
+            saida_data_inicio = data_inicio_saida.strftime("%d/%m/%Y")
+        with cc:
+            hora_fim = st.time_input("Horário Final", value=datetime.now().time(), key="saida_hora_fim")
+            saida_fim = hora_fim.strftime("%H:%M")
+        with cd:
+            data_fim_saida = st.date_input("Data Final", datetime.today(), key="saida_data_fim")
+            saida_data_fim = data_fim_saida.strftime("%d/%m/%Y")
+
+    st.markdown("<br>", unsafe_allow_html=True)
 
     col_headers(headers_sa)
 
@@ -562,6 +580,12 @@ elif "Saída" in relatorio:
             ws["I3"] = limite_total_instrucao
             ws["B26"] = observacao
             ws["B26"].alignment = Alignment(wrap_text=True, vertical="top")
+
+            # Escreve horários e datas nas células correspondentes
+            # Ajuste as células abaixo conforme o layout do seu template Saida.xlsx
+            ws["G5"] = saida_inicio
+            ws["H5"] = saida_fim
+            ws["I5"] = saida_data_inicio
 
             for idx, linha in enumerate(st.session_state.linhas_saida):
                 row = 5 + idx
