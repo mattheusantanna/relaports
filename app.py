@@ -660,9 +660,9 @@ elif "Estufagem" in relatorio:
             ws["D5"] = lacre
             ws["B6"] = terminal
             ws["D6"] = data_hora
-            ws["B7"] = inicio
+            ws["B7"] = inicio.strftime("%H:%M")
             ws["D7"] = data_hora
-            ws["B8"] = termino
+            ws["B8"] = termino.strftime("%H:%M")
             ws["D8"] = data_hora_termino
             ws["A29"] = inspetor
 
