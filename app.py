@@ -126,6 +126,10 @@ h2, h3 {
     letter-spacing: 0.01em !important;
 }
 
+[data-testid="collapsedControl"] span {
+    display: none !important;
+}
+
 [data-testid="stButton"] button[kind="primary"],
 [data-testid="stButton"] button {
     background: #1a2033 !important;
