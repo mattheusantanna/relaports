@@ -415,31 +415,24 @@ elif relatorio == "Estufagem Individual":
             "Terminal"
         )
 
-        inicio = st.text_input(
-            "Começo Estufagem"
-        )
+    # ── Bloco: Estufagem + Data/Hora ──────────────────────
+    st.markdown("**🕐 Datas e Horários da Estufagem**")
 
-        termino = st.text_input(
-            "Término Estufagem"
-        )
+    with st.container(border=True):
 
-        inspetor = st.text_input(
-            "Inspetor"
-        )
+        col_a, col_b, col_c, col_d = st.columns(4)
 
-    col4, col5 = st.columns(2)
+        with col_a:
+            inicio = st.text_input("Começo Estufagem")
 
-    with col4:
+        with col_b:
+            data_hora = st.text_input("Data/Hora Início")
 
-        data_hora = st.text_input(
-            "Data/Hora Início"
-        )
+        with col_c:
+            termino = st.text_input("Término Estufagem")
 
-    with col5:
-
-        data_hora_termino = st.text_input(
-            "Data/Hora Término"
-        )
+        with col_d:
+            data_hora_termino = st.text_input("Data/Hora Término")
 
     st.divider()
 
@@ -497,6 +490,11 @@ elif relatorio == "Estufagem Individual":
                 value=linha[key],
                 key=f"estufagem_{key}_{i}"
             )
+
+    st.divider()
+
+    # ── Inspetor antes da Observação ──────────────────────
+    inspetor = st.text_input("Inspetor")
 
     observacao = st.text_area(
         "Observação Final",
