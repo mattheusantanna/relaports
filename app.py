@@ -58,6 +58,34 @@ html, body, [data-testid="stAppViewContainer"] {
     background: #0f1117;
 }
 
+/* Esconde o texto no botão de reabrir */
+[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"] {
+    display: none !important;
+}
+
+/* Adiciona ícone visual no botão de reabrir */
+[data-testid="stExpandSidebarButton"]::after {
+    content: "›" !important;
+    font-size: 1.6rem !important;
+    color: #8892a4 !important;
+}
+
+[data-testid="stExpandSidebarButton"] {
+    background: #1a2033 !important;
+    border-radius: 0 8px 8px 0 !important;
+    width: 24px !important;
+    height: 48px !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stExpandSidebarButton"]:hover::after {
+    color: #e8eaf0 !important;
+}
+
+[data-testid="stExpandSidebarButton"]:hover {
+    background: #232d42 !important;
+}
+
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
     background: #161b27 !important;
