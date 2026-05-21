@@ -560,47 +560,19 @@ elif "Estufagem" in relatorio:
         terminal   = st.text_input("Terminal", placeholder="Terminal de operação")
 
     # ── Bloco datas/horários ──
-    # ── Bloco datas/horários ──
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("**🕐 Datas e Horários da Estufagem**")
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("**🕐 Datas e Horários da Estufagem**")
 
-with st.container(border=True):
-
-    ca, cb, cc, cd = st.columns(4)
-
-    with ca:
-
-        data_inicio = st.date_input(
-            "Data Início",
-            datetime.today()
-        )
-
-        inicio = st.time_input(
-            "Horário Início",
-            value=datetime.now().time()
-        )
-
-    with cb:
-
-        data_termino = st.date_input(
-            "Data Término",
-            datetime.today()
-        )
-
-        termino = st.time_input(
-            "Horário Término",
-            value=datetime.now().time()
-        )
-
-    data_hora = (
-        f"{data_inicio.strftime('%d/%m/%Y')} "
-        f"{inicio.strftime('%H:%M')}"
-    )
-
-    data_hora_termino = (
-        f"{data_termino.strftime('%d/%m/%Y')} "
-        f"{termino.strftime('%H:%M')}"
-    )
+    with st.container(border=True):
+        ca, cb, cc, cd = st.columns(4)
+        with ca:
+            inicio           = st.text_input("Começo Estufagem",  placeholder="HH:MM")
+        with cb:
+            data_hora        = st.text_input("Data/Hora Início",  placeholder="DD/MM/AAAA HH:MM")
+        with cc:
+            termino          = st.text_input("Término Estufagem", placeholder="HH:MM")
+        with cd:
+            data_hora_termino = st.text_input("Data/Hora Término", placeholder="DD/MM/AAAA HH:MM")
 
     st.divider()
 
@@ -659,9 +631,9 @@ with st.container(border=True):
             ws["D5"] = lacre
             ws["B6"] = terminal
             ws["D6"] = data_hora
-            ws["B7"] = inicio.strftime("%H:%M")
+            ws["B7"] = inicio
             ws["D7"] = data_hora
-            ws["B8"] = termino.strftime("%H:%M")
+            ws["B8"] = termino
             ws["D8"] = data_hora_termino
             ws["A29"] = inspetor
 
