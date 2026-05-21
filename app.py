@@ -372,7 +372,7 @@ if "Chegada" in relatorio:
         st.session_state.linhas_chegada = [linha_vazia_chegada()]
 
     headers_ch = [
-        "Data", "Nota Fiscal", "Lote", "Qtd Fardos",
+        "Container", "Nota Fiscal", "Lote", "Qtd Fardos",
         "Peso Bruto", "Peso Líquido", "Tara", "Placa",
         "Peso Caminhão", "Tara Caminhão",
         "Bruto Carga", "Líquido Carga"
