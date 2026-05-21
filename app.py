@@ -634,6 +634,7 @@ elif "Estufagem" in relatorio:
             ws["D5"] = max_gross
             ws["D6"] = lacre
             ws["B6"] = terminal
+            ws["D4"] = qtd_fardos_total
             ws["B7"] = inicio
             ws["D7"] = data_hora
             ws["B8"] = termino
