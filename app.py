@@ -40,7 +40,7 @@ html, body, [data-testid="stAppViewContainer"] {
 /* Adiciona ícone visual no botão de reabrir */
 [data-testid="stSidebarCollapseButton"] button::after,
 [data-testid="collapsedControl"] button::after {
-    content: "›" !important;
+    content: "<" !important;
     font-size: 1.4rem !important;
     color: #3a445a !important;
 }
@@ -65,7 +65,7 @@ html, body, [data-testid="stAppViewContainer"] {
 
 /* Adiciona ícone visual no botão de reabrir */
 [data-testid="stExpandSidebarButton"]::after {
-    content: "<" !important;
+    content: ">" !important;
     font-size: 1.6rem !important;
     color: #8892a4 !important;
 }
