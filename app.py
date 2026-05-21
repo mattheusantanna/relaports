@@ -566,13 +566,19 @@ elif "Estufagem" in relatorio:
     with st.container(border=True):
         ca, cb, cc, cd = st.columns(4)
         with ca:
-            inicio           = st.text_input("Começo Estufagem",  placeholder="HH:MM")
+            inicio = st.text_input("Começo Estufagem", placeholder="HH:MM")
         with cb:
-            data_hora        = st.text_input("Data/Hora Início",  placeholder="DD/MM/AAAA HH:MM")
+            st.markdown("**Início**")
+            data_inicio      = st.date_input("Data Início", datetime.today(), key="data_inicio", label_visibility="collapsed")
+            hora_inicio      = st.time_input("Hora Início", value=datetime.now().time(), key="hora_inicio", label_visibility="collapsed")
+            data_hora        = f"{data_inicio.strftime('%d/%m/%Y')} {hora_inicio.strftime('%H:%M')}"
         with cc:
-            termino          = st.text_input("Término Estufagem", placeholder="HH:MM")
+            termino = st.text_input("Término Estufagem", placeholder="HH:MM")
         with cd:
-            data_hora_termino = st.text_input("Data/Hora Término", placeholder="DD/MM/AAAA HH:MM")
+            st.markdown("**Término**")
+            data_termino         = st.date_input("Data Término", datetime.today(), key="data_termino", label_visibility="collapsed")
+            hora_termino         = st.time_input("Hora Término", value=datetime.now().time(), key="hora_termino", label_visibility="collapsed")
+            data_hora_termino    = f"{data_termino.strftime('%d/%m/%Y')} {hora_termino.strftime('%H:%M')}"
 
     st.divider()
 
