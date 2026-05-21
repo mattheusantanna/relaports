@@ -562,23 +562,21 @@ elif "Estufagem" in relatorio:
     # ── Bloco datas/horários ──
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("**🕐 Datas e Horários da Estufagem**")
-
+    
     with st.container(border=True):
         ca, cb, cc, cd = st.columns(4)
         with ca:
-            inicio = st.text_input("Começo Estufagem", placeholder="HH:MM")
+            hora_inicio = st.time_input("Começo Estufagem", value=datetime.now().time(), key="hora_inicio")
+            inicio = hora_inicio.strftime("%H:%M")
         with cb:
-            st.markdown("**Início**")
-            data_inicio      = st.date_input("Data Início", datetime.today(), key="data_inicio", label_visibility="collapsed")
-            hora_inicio      = st.time_input("Hora Início", value=datetime.now().time(), key="hora_inicio", label_visibility="collapsed")
-            data_hora        = f"{data_inicio.strftime('%d/%m/%Y')} {hora_inicio.strftime('%H:%M')}"
+            data_inicio = st.date_input("Data/Hora Início", datetime.today(), key="data_inicio")
+            data_hora = data_inicio.strftime("%d/%m/%Y")
         with cc:
-            termino = st.text_input("Término Estufagem", placeholder="HH:MM")
+            hora_termino = st.time_input("Término Estufagem", value=datetime.now().time(), key="hora_termino")
+            termino = hora_termino.strftime("%H:%M")
         with cd:
-            st.markdown("**Término**")
-            data_termino         = st.date_input("Data Término", datetime.today(), key="data_termino", label_visibility="collapsed")
-            hora_termino         = st.time_input("Hora Término", value=datetime.now().time(), key="hora_termino", label_visibility="collapsed")
-            data_hora_termino    = f"{data_termino.strftime('%d/%m/%Y')} {hora_termino.strftime('%H:%M')}"
+            data_termino = st.date_input("Data/Hora Término", datetime.today(), key="data_termino")
+            data_hora_termino = data_termino.strftime("%d/%m/%Y")
 
     st.divider()
 
